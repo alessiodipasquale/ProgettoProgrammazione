@@ -1,7 +1,8 @@
 #include <iostream>
 #include <cstdlib>
+#include <stdio.h>
 using namespace std;
-
+/*
 #define row 20
 #define columns 40
 /////////////////////////////////////////
@@ -38,9 +39,15 @@ int map[row][columns] = {
     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 };
 ////////////////////////////////////////
+void prepareGame() {
+}
 
 void startGame() {
     cleanScreen();
+    updateMap();
+
+
+
     printMap();
 }
 
@@ -77,3 +84,4 @@ void printMap() {
         cout<<endl;
     }
 }
+*/
