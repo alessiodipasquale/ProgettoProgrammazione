@@ -1,7 +1,7 @@
-#include "./includes.hpp"
+#include "../Utils/includes.hpp"
 
 class Collectible { //classe padre di tutti gli oggetti che possono essere incontrati
-    public:
+    protected:
         int xFromStart; //posizione dal bordo sinistro della mappa
         int yFromStart; // distanza rispetto all' inizio del livello 
         int type; // es: 0 per bonus, 1 per malus

@@ -1,9 +1,10 @@
-#include "./includes.hpp"
+#include "../Utils/includes.hpp"
+#include "LevelManager.hpp"
 
 class GameManager {
     public:
-        int currentLevel = 0;
-        int points = 0;
+        int currentLevel;
+        int points;
         int playerPosition;
         int mapHeight;
         int mapWidth;
@@ -21,4 +22,6 @@ class GameManager {
         int kill();
 
         void nextLevel();
+
+        void resetScore();
 };

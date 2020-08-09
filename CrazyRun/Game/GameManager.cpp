@@ -52,7 +52,7 @@ void GameManager::information() {
     while(!valid){
         cleanScreen();
         cout<<"********************************************************************"<<endl;
-        cout<<"*                        Progetto programmazione                   *"<<endl;
+        cout<<"*                     Progetto di programmazione                   *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"*                               Autori                             *"<<endl;
         cout<<"*                         Di Pasquale Alessio                      *"<<endl;
@@ -85,11 +85,23 @@ void GameManager::information() {
 
 void GameManager:: prepare(){
     cleanScreen();
-    cout<<"Preparo il gioco...";
+
+    nextLevel();
+    resetScore();
+
+    LevelManager run;
+    run.start();
+
+
+    kill();
 }
 
 void GameManager::nextLevel(){
-    currentLevel = currentLevel + 1;
+    this->currentLevel = this->currentLevel + 1;
+}
+
+void GameManager::resetScore(){
+    this->points = 0;
 }
 
 int GameManager::kill(){

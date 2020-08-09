@@ -1,7 +1,7 @@
 #include "Collectibles.hpp"
 
 Ramp::Ramp() { 
-    type = 0;
-    value = 10;
-    appearance = 'R';
+    this->type = 0;
+    this->value = 10;
+    this->appearance = 'R';
 }
