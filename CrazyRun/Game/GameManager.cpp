@@ -89,9 +89,7 @@ void GameManager:: prepare(){
     nextLevel();
     resetScore();
 
-    LevelManager run;
-    run.start();
-
+    LevelManager run(this->currentLevel);
 
     kill();
 }
