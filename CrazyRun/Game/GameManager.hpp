@@ -3,11 +3,9 @@
 
 class GameManager {
     public:
-        int currentLevel;
+        int lv;
         int points;
         int playerPosition;
-        int mapHeight;
-        int mapWidth;
 
         void cleanScreen();
 
@@ -19,9 +17,13 @@ class GameManager {
 
         void start();
 
+        void gameOver();
+
         int kill();
 
         void nextLevel();
 
         void resetScore();
+
+        void resetLv();
 };

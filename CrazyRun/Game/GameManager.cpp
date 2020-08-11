@@ -86,20 +86,31 @@ void GameManager::information() {
 void GameManager:: prepare(){
     cleanScreen();
 
-    nextLevel();
+    resetLv();
     resetScore();
 
-    LevelManager run(this->currentLevel);
+    LevelManager run(this->lv, this->points);
+    level *currentLevel = run.getCurrentLevel(); 
+    cout<<currentLevel->levelNumber<<endl;
+    cout<<currentLevel->startingPoints<<endl;
 
     kill();
 }
 
+void GameManager::gameOver(){
+    cout<<"Game Over"<<endl;
+}
+
 void GameManager::nextLevel(){
-    this->currentLevel = this->currentLevel + 1;
+
 }
 
 void GameManager::resetScore(){
     this->points = 0;
+}
+
+void GameManager::resetLv(){
+    this->lv = 1;
 }
 
 int GameManager::kill(){

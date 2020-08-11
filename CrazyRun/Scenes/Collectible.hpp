@@ -17,3 +17,9 @@ class Collectible { //classe padre di tutti gli oggetti che possono essere incon
                      //ma meno rispetto agli altri oggetti 
         bool gameOver; //facoltativo, ma in caso di incidente con un altra macchina io terminerei il gioco
 };
+
+
+struct collectible{
+        Collectible collect;
+        collectible *next; 
+};

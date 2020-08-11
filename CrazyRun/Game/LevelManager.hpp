@@ -1,22 +1,26 @@
 #include "../Utils/includes.hpp"
 #include "../Scenes/Map.hpp"
 
-//lista di Map, una per ogni livello passato
 struct level{
     Map map;
+    int levelNumber;
+    int startingPoints;
     level* next;
     level* prev;
 };
+
 class LevelManager{
     private:
          level *currentLevel = new level;
          Map currentMap;
     public:
-        LevelManager(int curr);
+        LevelManager(int startingLevel, int startingPoints);
 
-        void newLevel();
+        level* newLevel();
 
-        void previousLevel();
+        level* previousLevel();
 
-        void nextLevel();
+        level* nextLevel();
+
+        level* getCurrentLevel();
 };
