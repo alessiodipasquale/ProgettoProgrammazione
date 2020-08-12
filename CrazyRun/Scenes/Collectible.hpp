@@ -5,7 +5,7 @@ class Collectible { //classe padre di tutti gli oggetti che possono essere incon
         int xFromStart; //posizione dal bordo sinistro della mappa
         int yFromStart; // distanza rispetto all' inizio del livello 
         int type; // es: 0 per bonus, 1 per malus
-        int value;
+        int baseValue;
         char appearance; // carattere o simbolo identificativo
         int level; //livello in cui viene incontrato
         int power; // non sapevo come altro chiamarlo, ma in sintesi è la "potenza" (che può essere positiva o negativa) 

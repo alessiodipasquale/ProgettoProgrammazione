@@ -15,11 +15,13 @@ class GameManager {
 
         void prepare();
 
-        void start();
+        void start(LevelManager run, level *currentLevel);
 
         void gameOver();
 
         int kill();
+
+        void prevLevel();
 
         void nextLevel();
 

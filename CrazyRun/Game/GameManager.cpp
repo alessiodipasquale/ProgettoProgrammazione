@@ -90,15 +90,18 @@ void GameManager:: prepare(){
     resetScore();
 
     LevelManager run(this->lv, this->points);
-    level *currentLevel = run.getCurrentLevel(); 
-    cout<<currentLevel->levelNumber<<endl;
-    cout<<currentLevel->startingPoints<<endl;
+    level *currentLevel = run.getCurrentLevel();
 
+    start(run, currentLevel); 
     kill();
 }
 
 void GameManager::gameOver(){
     cout<<"Game Over"<<endl;
+}
+
+void GameManager::prevLevel(){
+
 }
 
 void GameManager::nextLevel(){
@@ -117,6 +120,15 @@ int GameManager::kill(){
     return 0;
 }
 
-void GameManager::start(){
-    
+void GameManager::start(LevelManager run, level *currentLevel){
+    bool gameOver = false;
+    while(true){ 
+        while(true){ //condizione di next level
+            
+            
+            
+            if (gameOver) this->gameOver();
+        }
+
+    }
 }

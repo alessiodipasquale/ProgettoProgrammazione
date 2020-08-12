@@ -1,14 +1,15 @@
 #include "LevelManager.hpp"
-
+//il primo livello lo genera il costruttore 
 LevelManager::LevelManager(int startingLevel, int startingPoints){
     this->currentLevel->prev = NULL;
     this->currentLevel->next = NULL;
     this->currentMap = this->currentLevel->map;
     this->currentLevel->levelNumber = startingLevel;
+    this->currentMap.calculateLevelDifficult(this->currentLevel->levelNumber);
     this->currentLevel->startingPoints = startingPoints;
 }
 
- //la prima volta si fa new level, dopo di che si userà next level, che in caso di bisogno richiama new level
+ //si userà next level, che in caso di bisogno richiama new level
 level* LevelManager::newLevel(){  
     this->currentLevel->next = new level;
     this->currentLevel->next->prev = this->currentLevel;
@@ -16,6 +17,7 @@ level* LevelManager::newLevel(){
     this->currentLevel->next = NULL;
     this->currentMap = this->currentLevel->map;
     this->currentLevel->levelNumber = this->currentLevel->prev->levelNumber + 1;
+    this->currentMap.calculateLevelDifficult(this->currentLevel->levelNumber);
     this->currentLevel->startingPoints = this->currentLevel->prev->startingPoints + LEVELUPRANGE;
     return this->currentLevel;
 }
