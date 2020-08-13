@@ -6,6 +6,10 @@ class Map { //penso che sia utile come classe, ad esempio si può implementare u
             //un collectible e lo inserisce. O comunque per i metodi di scorrimento/movimento etc.
     public:
         void calculateLevelDifficult(int level);
+
+        collectible* getBonusList();
+        collectible* getMalusList();
+        collectible* getCarList();
  
     private:
         int levelOfMalus;
@@ -18,4 +22,5 @@ class Map { //penso che sia utile come classe, ad esempio si può implementare u
         void newMalus();
 
         void newBonus();
+
 };

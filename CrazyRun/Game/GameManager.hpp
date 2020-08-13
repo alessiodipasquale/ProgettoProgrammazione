@@ -28,4 +28,14 @@ class GameManager {
         void resetScore();
 
         void resetLv();
+
+        int collision();
+
+        void collisionControl();
+
+        char getPlayerMovement();
+
+        void print();
+
+        void increasePointsBy(int value);
 };

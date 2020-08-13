@@ -120,15 +120,60 @@ int GameManager::kill(){
     return 0;
 }
 
-void GameManager::start(LevelManager run, level *currentLevel){
-    bool gameOver = false;
-    while(true){ 
-        while(true){ //condizione di next level
-            
-            
-            
-            if (gameOver) this->gameOver();
-        }
+void GameManager::increasePointsBy(int value){
+    this->points = this->points + value;
+};
 
+int GameManager::collision(){
+    if(0) {
+
+    }else return -1;
+}
+
+void GameManager::collisionControl(){
+    int data = collision();
+    if (data > -1){
+        if (data == 0){
+
+        } else {
+            if (data == 1){
+
+            } else {
+                gameOver();
+            }
+        }
+    }
+}
+
+char GameManager::getPlayerMovement(){
+
+}
+
+void GameManager::print(){
+
+}
+
+void GameManager::start(LevelManager run, level *currentLevel){
+    while(true){ 
+        //START NEW LEVEL "animations"
+        bool levelChanged = false;
+        while(!levelChanged){ //condizione di next level
+            increasePointsBy(1);
+            collisionControl();
+            if(this->points >= currentLevel->startingPoints + LEVELUPRANGE){
+                currentLevel = run.nextLevel();
+                levelChanged = true;
+            }
+            if(this->points <= currentLevel->startingPoints - LEVELDOWNRANGE){
+                if(this->lv == 1) gameOver();
+                else {
+                    currentLevel = run.previousLevel();
+                    levelChanged = true;
+                }    
+            }
+            char movement = getPlayerMovement();
+            print();
+            
+        }
     }
 }
