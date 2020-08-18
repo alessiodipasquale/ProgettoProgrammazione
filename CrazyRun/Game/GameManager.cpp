@@ -146,7 +146,52 @@ void GameManager::collisionControl(){
 }
 
 char GameManager::getPlayerMovement(){
-
+    initscr();
+    noecho();
+    nodelay(stdscr, true);
+    char c1 = getch();
+    if (c1 == '\033') { // if the first value is esc
+        getch(); // skip the [ 
+        char c = getch();      
+        switch(c) { // the real value
+            case 'A':
+                // code for arrow up
+                cout<<"su"<<endl;
+                return 'u';
+            case 'B':
+                // code for arrow down
+                cout<<"giu'"<<endl;
+                return 'd';
+            case 'C':
+                // code for arrow right
+                cout<<"dx"<<endl;
+                return 'r';
+            case 'D':
+                // code for arrow left
+                cout<<"sx"<<endl;
+                return 'l';
+            default:
+                cout<<"Error"<<endl;   
+        }
+    } else {
+        if(c1 == 'q'){
+            endwin();
+            cout<<"sure? (y for yes,  n for no)"<<endl;
+            do{
+                cin>>c1;
+                if(c1 == 'y') {
+                    return 0;
+                }else {
+                    if(c1 == 'n'){
+                        cleanScreen();
+                        stdscr = newwin(0,0,0,0);
+                        return -1;
+                    }else cout<<"wrong key pressed"<<endl;  
+                }
+            }while(c1 != 'y' && c1 != 'n' );  
+            cout<<"uscito"<<endl;  
+        }
+    }    
 }
 
 void GameManager::print(){
@@ -154,7 +199,9 @@ void GameManager::print(){
 }
 
 void GameManager::start(LevelManager run, level *currentLevel){
-    while(true){ 
+    char movement;
+    bool inGame = true;
+    while(inGame){ 
         //START NEW LEVEL "animations"
         bool levelChanged = false;
         while(!levelChanged){ //condizione di next level
@@ -171,9 +218,10 @@ void GameManager::start(LevelManager run, level *currentLevel){
                     levelChanged = true;
                 }    
             }
-            char movement = getPlayerMovement();
-            print();
-            
+            print();  
+            movement = getPlayerMovement();
+            if(movement == 0) inGame=false;
         }
     }
+    gameOver();
 }
