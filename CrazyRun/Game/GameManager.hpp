@@ -35,7 +35,9 @@ class GameManager {
 
         char getPlayerCommand();
 
-        void mapConstruction(char mat[][MAPWIDTH], char command, int collisionType);
+        void initializeMap(char mat[][MAPWIDTH]);
+
+        void mapConstruction(char mat[][MAPWIDTH], char command, int collisionType, level* currentLevel, int viewPosition);
 
         void print(char mat[][MAPWIDTH]);
 

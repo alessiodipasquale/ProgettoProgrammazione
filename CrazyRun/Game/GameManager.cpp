@@ -182,8 +182,18 @@ char GameManager::getPlayerCommand(){
     }    
 }
 
-void GameManager::mapConstruction(char mat[][MAPWIDTH], char command, int collisionType){
+void GameManager::initializeMap(char mat[][MAPWIDTH]){
+    for(int i=0; i<MAPHEIGHT; i++){
+        for(int j=0; j<MAPWIDTH; j++){
+            mat[i][j] = ' ';
+        }
+    }
+}
 
+void GameManager::mapConstruction(char mat[][MAPWIDTH], char command, int collisionType, level*currentLevel, int viewPosition){
+    if(currentLevel->map.getLastConsideredZone() - viewPosition <= MAPHEIGHT + 1){
+        
+    }
 }
 
 void GameManager::print(char mat[][MAPWIDTH]){
@@ -195,14 +205,18 @@ void GameManager::start(LevelManager run, level *currentLevel){
     bool inGame = true;
     int collisionType;
     char mat[MAPHEIGHT][MAPWIDTH];
+    int viewPosition;
 
     while(inGame){ 
         //START NEW LEVEL "animations"
         bool levelChanged = false;
+        initializeMap(mat);
+        viewPosition = 0;
 
         while(!levelChanged){ //condizione di next level
 
             increasePointsBy(1);
+            viewPosition++;
             collisionType = collisionControl();
             //collision stuff
 
@@ -219,7 +233,7 @@ void GameManager::start(LevelManager run, level *currentLevel){
             }
 
             if(!levelChanged && inGame ){
-                mapConstruction(mat, command, collisionType);
+                mapConstruction(mat, command, collisionType, currentLevel, viewPosition);
                 print(mat);  
                 command = getPlayerCommand();
                 if(command == 0) inGame = false;
