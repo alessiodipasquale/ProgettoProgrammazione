@@ -31,11 +31,13 @@ class GameManager {
 
         int collision();
 
-        void collisionControl();
+        int collisionControl();
 
-        char getPlayerMovement();
+        char getPlayerCommand();
 
-        void print();
+        void mapConstruction(char mat[][MAPWIDTH], char command, int collisionType);
+
+        void print(char mat[][MAPWIDTH]);
 
         void increasePointsBy(int value);
 };

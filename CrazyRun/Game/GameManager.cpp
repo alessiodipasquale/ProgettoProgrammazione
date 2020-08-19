@@ -130,22 +130,11 @@ int GameManager::collision(){
     }else return -1;
 }
 
-void GameManager::collisionControl(){
-    int data = collision();
-    if (data > -1){
-        if (data == 0){
-
-        } else {
-            if (data == 1){
-
-            } else {
-                gameOver();
-            }
-        }
-    }
+int GameManager::collisionControl(){
+    
 }
 
-char GameManager::getPlayerMovement(){
+char GameManager::getPlayerCommand(){
     initscr();
     noecho();
     nodelay(stdscr, true);
@@ -189,38 +178,52 @@ char GameManager::getPlayerMovement(){
                     }else cout<<"wrong key pressed"<<endl;  
                 }
             }while(c1 != 'y' && c1 != 'n' );  
-            cout<<"uscito"<<endl;  
         }
     }    
 }
 
-void GameManager::print(){
+void GameManager::mapConstruction(char mat[][MAPWIDTH], char command, int collisionType){
+
+}
+
+void GameManager::print(char mat[][MAPWIDTH]){
 
 }
 
 void GameManager::start(LevelManager run, level *currentLevel){
-    char movement;
+    char command = -1;
     bool inGame = true;
+    int collisionType;
+    char mat[MAPHEIGHT][MAPWIDTH];
+
     while(inGame){ 
         //START NEW LEVEL "animations"
         bool levelChanged = false;
+
         while(!levelChanged){ //condizione di next level
+
             increasePointsBy(1);
-            collisionControl();
+            collisionType = collisionControl();
+            //collision stuff
+
             if(this->points >= currentLevel->startingPoints + LEVELUPRANGE){
                 currentLevel = run.nextLevel();
                 levelChanged = true;
             }
             if(this->points <= currentLevel->startingPoints - LEVELDOWNRANGE){
-                if(this->lv == 1) gameOver();
+                if(this->lv == 1) inGame = false;
                 else {
                     currentLevel = run.previousLevel();
                     levelChanged = true;
                 }    
             }
-            print();  
-            movement = getPlayerMovement();
-            if(movement == 0) inGame=false;
+
+            if(!levelChanged && inGame ){
+                mapConstruction(mat, command, collisionType);
+                print(mat);  
+                command = getPlayerCommand();
+                if(command == 0) inGame = false;
+            }
         }
     }
     gameOver();
