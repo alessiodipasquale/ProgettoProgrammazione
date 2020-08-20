@@ -23,4 +23,8 @@ class LevelManager{
         level* nextLevel();
 
         level* getCurrentLevel();
+
+        int generateDensity();
+
+        int generateTime();
 };

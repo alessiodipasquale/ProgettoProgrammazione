@@ -16,6 +16,8 @@ class Collectible { //classe padre di tutti gli oggetti che possono essere incon
                      //gli altri oggetti, quindi se "moving" è true, a ogni refresh l'oggetto si muoverà comunque verso il basso, 
                      //ma meno rispetto agli altri oggetti 
         bool gameOver; //facoltativo, ma in caso di incidente con un altra macchina io terminerei il gioco
+   public:
+        int getYFromStart();
 };
 
 

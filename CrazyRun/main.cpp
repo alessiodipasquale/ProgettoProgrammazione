@@ -1,6 +1,7 @@
 #include "./Game/GameManager.hpp"
 
-int main() {   
+int main() {
+    srand(time(NULL));   
     GameManager game;
     game.mainMenu();
     return 0;

@@ -37,9 +37,9 @@ class GameManager {
 
         void initializeMap(char mat[][MAPWIDTH]);
 
-        void mapConstruction(char mat[][MAPWIDTH], char command, int collisionType, level* currentLevel, int viewPosition);
+        void mapConstruction(int density, level* currentLevel, LevelManager run, int viewPosition);
 
-        void print(char mat[][MAPWIDTH]);
+        void print(char mat[][MAPWIDTH],level*currentLevel, int viewPosition, collectible*bonusList, collectible*malusList, collectible*carsList);
 
         void increasePointsBy(int value);
 };

@@ -144,20 +144,12 @@ char GameManager::getPlayerCommand(){
         char c = getch();      
         switch(c) { // the real value
             case 'A':
-                // code for arrow up
-                cout<<"su"<<endl;
                 return 'u';
             case 'B':
-                // code for arrow down
-                cout<<"giu'"<<endl;
                 return 'd';
             case 'C':
-                // code for arrow right
-                cout<<"dx"<<endl;
                 return 'r';
             case 'D':
-                // code for arrow left
-                cout<<"sx"<<endl;
                 return 'l';
             default:
                 cout<<"Error"<<endl;   
@@ -190,15 +182,43 @@ void GameManager::initializeMap(char mat[][MAPWIDTH]){
     }
 }
 
-void GameManager::mapConstruction(char mat[][MAPWIDTH], char command, int collisionType, level*currentLevel, int viewPosition){
-    if(currentLevel->map.getLastConsideredZone() - viewPosition <= MAPHEIGHT + 1){
-        
+void GameManager::mapConstruction(int density, level*currentLevel, LevelManager run, int viewPosition){
+    int numberOfBonus = 0;
+    int numberOfMalus = 0;
+    bool car = false;
+
+    if(currentLevel->map.getLastConsideredZone() - viewPosition <= MAPHEIGHT){
+        currentLevel->map.updateLastConsideredZone(); //+31
+        if(currentLevel->levelNumber > 1){
+            numberOfBonus = density/currentLevel->levelNumber;
+            if(currentLevel->levelNumber >= 10){
+                int random = rand() % 3; 
+                if(random == 0){ // 33% di possibilità di spawn
+                    car = true;
+                    numberOfMalus = density - numberOfBonus - 1;
+                }
+            }else numberOfMalus = density - numberOfBonus;
+        }else numberOfBonus = density;
+
+        currentLevel->map.generateNewZone(numberOfBonus, numberOfMalus, car);    
     }
 }
 
-void GameManager::print(char mat[][MAPWIDTH]){
+void GameManager::print(char mat[][MAPWIDTH], level*currentLevel, int viewPosition, collectible*bonusList, collectible*malusList, collectible*carsList){
+    //ad ogni chiamata della funzione, le matrici vengono shiftate verso il basso e questi
+    //tre controlli si occupano dei nuovi collectible
 
-}
+    while(bonusList && bonusList->collect.getYFromStart() < viewPosition + (MAPHEIGHT-1) ){
+
+    }
+    while(malusList && malusList->collect.getYFromStart() < viewPosition + (MAPHEIGHT-1)){
+
+    }
+    while(carsList && carsList->collect.getYFromStart() < viewPosition + (MAPHEIGHT-1)){
+
+    }
+
+}////// ATTENZIONE: IMPLEMENTARE MATRICE GEMELLA CON PUNTATORE A COLLECTIBLE PER OTTIMIZZARE
 
 void GameManager::start(LevelManager run, level *currentLevel){
     char command = -1;
@@ -212,8 +232,12 @@ void GameManager::start(LevelManager run, level *currentLevel){
         bool levelChanged = false;
         initializeMap(mat);
         viewPosition = 0;
+        int density = run.generateDensity();
+        collectible*bonusList = currentLevel->map.getBonusList();
+        collectible*malusList = currentLevel->map.getMalusList();
+        collectible*carsList = currentLevel->map.getCarsList();
 
-        while(!levelChanged){ //condizione di next level
+        while(!levelChanged){ // next level condition
 
             increasePointsBy(1);
             viewPosition++;
@@ -233,11 +257,13 @@ void GameManager::start(LevelManager run, level *currentLevel){
             }
 
             if(!levelChanged && inGame ){
-                mapConstruction(mat, command, collisionType, currentLevel, viewPosition);
-                print(mat);  
+                mapConstruction(density, currentLevel, run, viewPosition);
+                print(mat, currentLevel, viewPosition, bonusList, malusList, carsList);  
                 command = getPlayerCommand();
                 if(command == 0) inGame = false;
             }
+            int time = run.generateTime();
+            usleep(time); 
         }
     }
     gameOver();

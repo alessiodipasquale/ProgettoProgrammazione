@@ -5,7 +5,7 @@ LevelManager::LevelManager(int startingLevel, int startingPoints){
     this->currentLevel->next = NULL;
     this->currentMap = this->currentLevel->map;
     this->currentLevel->levelNumber = startingLevel;
-    this->currentMap.calculateLevelDifficult(this->currentLevel->levelNumber);
+    this->currentMap.calculateDifficult(this->currentLevel->levelNumber);
     this->currentLevel->startingPoints = startingPoints;
 }
 
@@ -17,7 +17,7 @@ level* LevelManager::newLevel(){
     this->currentLevel->next = NULL;
     this->currentMap = this->currentLevel->map;
     this->currentLevel->levelNumber = this->currentLevel->prev->levelNumber + 1;
-    this->currentMap.calculateLevelDifficult(this->currentLevel->levelNumber);
+    this->currentMap.calculateDifficult(this->currentLevel->levelNumber);
     this->currentLevel->startingPoints = this->currentLevel->prev->startingPoints + LEVELUPRANGE;
     return this->currentLevel;
 }
@@ -45,4 +45,18 @@ level* LevelManager::nextLevel(){
 level* LevelManager::getCurrentLevel(){
      if(this->currentLevel != NULL)
         return this->currentLevel;
+}
+
+int LevelManager::generateDensity(){
+    int cellsNumber = (MAPWIDTH -2) * MAPHEIGHT;
+    int max = cellsNumber / 100 * MAXDENSITY; 
+    int thresholdController = this->currentLevel->levelNumber;
+    if(thresholdController > THRESHOLDLEVELFORMAXDENSITY) thresholdController = THRESHOLDLEVELFORMAXDENSITY;
+    return (int)(( thresholdController * max ) / THRESHOLDLEVELFORMAXDENSITY);
+}
+
+int LevelManager::generateTime(){
+    // 500000 -> 50000
+
+    return 100000;
 }

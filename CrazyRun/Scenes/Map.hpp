@@ -9,9 +9,10 @@ class Map { //penso che sia utile come classe, ad esempio si può implementare u
 
         collectible* getBonusList();
         collectible* getMalusList();
-        collectible* getCarList();
+        collectible* getCarsList();
         int getLastConsideredZone();
-        void generateNewZone();
+        void generateNewZone(int numberOfBonus, int numberOfMalus, bool car);
+        void updateLastConsideredZone();
  
     private:
         int levelOfMalus;
@@ -25,5 +26,7 @@ class Map { //penso che sia utile come classe, ad esempio si può implementare u
         void newMalus();
 
         void newBonus();
+
+        void newCar();
 
 };
