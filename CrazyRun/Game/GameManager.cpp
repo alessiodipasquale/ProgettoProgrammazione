@@ -204,17 +204,17 @@ void GameManager::mapConstruction(int density, level*currentLevel, LevelManager 
     }
 }
 
-void GameManager::print(char mat[][MAPWIDTH], level*currentLevel, int viewPosition, collectible*bonusList, collectible*malusList, collectible*carsList){
+void GameManager::print(char mat[][MAPWIDTH], level*currentLevel, int viewPosition, bonus*bonusList, malus*malusList, car*carsList){
     //ad ogni chiamata della funzione, le matrici vengono shiftate verso il basso e questi
     //tre controlli si occupano dei nuovi collectible
 
-    while(bonusList && bonusList->collect.getYFromStart() < viewPosition + (MAPHEIGHT-1) ){
+    while(bonusList && bonusList->ramp.getYFromStart() < viewPosition + (MAPHEIGHT-1) ){
 
     }
-    while(malusList && malusList->collect.getYFromStart() < viewPosition + (MAPHEIGHT-1)){
+    while(malusList && malusList->obstacle.getYFromStart() < viewPosition + (MAPHEIGHT-1)){
 
     }
-    while(carsList && carsList->collect.getYFromStart() < viewPosition + (MAPHEIGHT-1)){
+    while(carsList && carsList->vehicle.getYFromStart() < viewPosition + (MAPHEIGHT-1)){
 
     }
 
@@ -233,9 +233,9 @@ void GameManager::start(LevelManager run, level *currentLevel){
         initializeMap(mat);
         viewPosition = 0;
         int density = run.generateDensity();
-        collectible*bonusList = currentLevel->map.getBonusList();
-        collectible*malusList = currentLevel->map.getMalusList();
-        collectible*carsList = currentLevel->map.getCarsList();
+        bonus*bonusList = currentLevel->map.getBonusList();
+        malus*malusList = currentLevel->map.getMalusList();
+        car*carsList = currentLevel->map.getCarsList();
 
         while(!levelChanged){ // next level condition
 

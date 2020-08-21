@@ -4,6 +4,7 @@
 class Ramp : public Collectible { //esempio di oggetto "raccoglibile"
     public:
         Ramp();
+
 };
 
 class Obstacle : public Collectible {
@@ -14,4 +15,20 @@ class Obstacle : public Collectible {
 class Car : public Collectible {
     public: 
         Car();
+};
+
+
+struct bonus{
+        Ramp ramp;
+        bonus *next; 
+};
+
+struct malus{
+        Obstacle obstacle;
+        malus *next; 
+};
+
+struct car{
+        Car vehicle;
+        car *next; 
 };

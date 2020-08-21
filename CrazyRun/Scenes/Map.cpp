@@ -1,14 +1,30 @@
 #include "Map.hpp"
 
 void Map::newMalus(){
-    //numero random 
+    //numero random
+    if(this->bonusHead == NULL){
+        this->bonusHead = new bonus;
+        this->bonusHead->next = NULL;
+        this->bonusHead->ramp.init();
+    } 
 }
 
 void Map::newBonus(){
     
 }
 
+void Map::newCar(){
+
+}
+
 void Map::generateNewZone(int numberOfBonus, int numberOfMalus, bool car){
+    if(car) newCar();
+    for (int i=0; i<numberOfBonus; i++){
+        newBonus();
+    }
+    for (int i=0; i<numberOfMalus; i++){
+        newMalus();
+    }
     
 }
 
@@ -25,14 +41,14 @@ int Map::getLastConsideredZone(){
     return this->lastConsideredZone;
 }
 
-collectible* Map::getBonusList(){
+bonus* Map::getBonusList(){
     return this->bonusHead;
 }
 
-collectible* Map::getMalusList(){
+malus* Map::getMalusList(){
     return this->malusHead;
 }
 
-collectible* Map::getCarsList(){
+car* Map::getCarsList(){
     return this->carHead;
 }
