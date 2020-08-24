@@ -1,36 +1,94 @@
 #include "Map.hpp"
 
-void Map::newMalus(){
-    //numero random
+void Map::newMalus(int level, int x, int y){
+    if(this->malusHead == NULL){
+        this->malusHead = new malus;
+        this->malusHead->next = NULL;
+        this->malusHead->obstacle.init(level, x, y);
+    }else{
+        malus*mHead = this->malusHead;
+        while(mHead){
+            mHead = mHead->next;
+        }
+        mHead = new malus;
+        mHead->next = NULL;
+        mHead->obstacle.init(level, x, y);
+    }
+}
+
+void Map::newBonus(int level, int x, int y){
     if(this->bonusHead == NULL){
         this->bonusHead = new bonus;
         this->bonusHead->next = NULL;
-        this->bonusHead->ramp.init();
+        this->bonusHead->ramp.init(level, x, y);
+    }else{
+        bonus*bHead = this->bonusHead;
+        while(bHead){
+            bHead = bHead->next;
+        }
+        bHead = new bonus;
+        bHead->next = NULL;
+        bHead->ramp.init(level, x,y);
+    }
+}
+
+void Map::newCar(int level, int x, int lastConsideredZone){
+    if(this->carHead == NULL){
+        this->carHead = new car;
+        this->carHead->next = NULL;
+        this->carHead->vehicle.init(level, x, lastConsideredZone);
+    }else{
+        car*cHead = this->carHead;
+        while(cHead){
+            cHead = cHead->next;
+        }
+        cHead = new car;
+        cHead->next = NULL;
+        cHead->vehicle.init(level, x, lastConsideredZone);
     } 
 }
 
-void Map::newBonus(){
+void Map::generateNewZone(int numberOfBonus, int numberOfMalus, bool car, int level){
     
-}
+    for (int i=0; i<MAPHEIGHT; i++) {
+        for (int j=0; j<MAPWIDTH; j++){
+            if(j == 0 || j == MAPWIDTH-1) this->generationMatrix[i][j] = false;
+            else  this->generationMatrix[i][j] = true;
+        }
+    }
 
-void Map::newCar(){
+    int x, y, xCar = -1;
+    if(car) {
+        xCar = (rand() % MAPWIDTH - 3) + 1;  //per evitare che la macchina finisca sui bordi
+        newCar(level,  xCar, this->lastConsideredZone);
 
-}
+        for (int i=0; i<MAPHEIGHT; i++) this->generationMatrix[i][xCar] = false;
+    }
 
-void Map::generateNewZone(int numberOfBonus, int numberOfMalus, bool car){
-    if(car) newCar();
     for (int i=0; i<numberOfBonus; i++){
-        newBonus();
+        bool ok = false;
+        while(!ok){
+            x = (rand() % MAPWIDTH - 3) + 1;
+            y = (rand() % MAPHEIGHT - 3) + 1;
+            if(this->generationMatrix[y][x]){
+                ok = true;
+                this->generationMatrix[y][x] = false;
+            }  
+        }
+        newBonus(level, x, (this->lastConsideredZone - MAPHEIGHT) + y);
     }
     for (int i=0; i<numberOfMalus; i++){
-        newMalus();
+        bool ok = false;
+        while(!ok){
+            x = (rand() % MAPWIDTH - 3) + 1;
+            y = (rand() % MAPHEIGHT - 3) + 1;
+            if(this->generationMatrix[y][x]){
+                ok = true;
+                this->generationMatrix[y][x] = false;
+            }  
+        }
+        newMalus(level, x, (this->lastConsideredZone - MAPHEIGHT) + y);
     }
-    
-}
-
-void Map::calculateDifficult(int level){
-    this->levelOfBonus = level/10;
-    this->levelOfMalus = level/10;
 }
 
 void Map::updateLastConsideredZone(){

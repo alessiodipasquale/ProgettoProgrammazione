@@ -200,7 +200,7 @@ void GameManager::mapConstruction(int density, level*currentLevel, LevelManager 
             }else numberOfMalus = density - numberOfBonus;
         }else numberOfBonus = density;
 
-        currentLevel->map.generateNewZone(numberOfBonus, numberOfMalus, car);    
+        currentLevel->map.generateNewZone(numberOfBonus, numberOfMalus, car, currentLevel->levelNumber);    
     }
 }
 

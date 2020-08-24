@@ -5,7 +5,6 @@ LevelManager::LevelManager(int startingLevel, int startingPoints){
     this->currentLevel->next = NULL;
     this->currentMap = this->currentLevel->map;
     this->currentLevel->levelNumber = startingLevel;
-    this->currentMap.calculateDifficult(this->currentLevel->levelNumber);
     this->currentLevel->startingPoints = startingPoints;
 }
 
@@ -17,7 +16,6 @@ level* LevelManager::newLevel(){
     this->currentLevel->next = NULL;
     this->currentMap = this->currentLevel->map;
     this->currentLevel->levelNumber = this->currentLevel->prev->levelNumber + 1;
-    this->currentMap.calculateDifficult(this->currentLevel->levelNumber);
     this->currentLevel->startingPoints = this->currentLevel->prev->startingPoints + LEVELUPRANGE;
     return this->currentLevel;
 }
