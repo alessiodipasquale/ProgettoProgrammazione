@@ -17,6 +17,7 @@ void Map::newMalus(int level, int x, int y){
 }
 
 void Map::newBonus(int level, int x, int y){
+
     if(this->bonusHead == NULL){
         this->bonusHead = new bonus;
         this->bonusHead->next = NULL;
@@ -49,7 +50,6 @@ void Map::newCar(int level, int x, int lastConsideredZone){
 }
 
 void Map::generateNewZone(int numberOfBonus, int numberOfMalus, bool car, int level){
-    
     for (int i=0; i<MAPHEIGHT; i++) {
         for (int j=0; j<MAPWIDTH; j++){
             if(j == 0 || j == MAPWIDTH-1) this->generationMatrix[i][j] = false;

@@ -91,7 +91,9 @@ void GameManager:: prepare(){
 
     LevelManager run(this->lv, this->points);
     level *currentLevel = run.getCurrentLevel();
-
+    initscr();
+    noecho();
+    nodelay(stdscr, true);
     start(run, currentLevel); 
     kill();
 }
@@ -135,9 +137,6 @@ int GameManager::collisionControl(){
 }
 
 char GameManager::getPlayerCommand(){
-    initscr();
-    noecho();
-    nodelay(stdscr, true);
     char c1 = getch();
     if (c1 == '\033') { // if the first value is esc
         getch(); // skip the [ 
@@ -166,6 +165,9 @@ char GameManager::getPlayerCommand(){
                     if(c1 == 'n'){
                         cleanScreen();
                         stdscr = newwin(0,0,0,0);
+                        initscr();
+                        noecho();
+                        nodelay(stdscr, true);
                         return -1;
                     }else cout<<"wrong key pressed"<<endl;  
                 }
@@ -186,7 +188,6 @@ void GameManager::mapConstruction(int density, level*currentLevel, LevelManager 
     int numberOfBonus = 0;
     int numberOfMalus = 0;
     bool car = false;
-
     if(currentLevel->map.getLastConsideredZone() - viewPosition <= MAPHEIGHT){
         currentLevel->map.updateLastConsideredZone(); //+31
         if(currentLevel->levelNumber > 1){
@@ -204,19 +205,47 @@ void GameManager::mapConstruction(int density, level*currentLevel, LevelManager 
     }
 }
 
-void GameManager::print(char mat[][MAPWIDTH], level*currentLevel, int viewPosition, bonus*bonusList, malus*malusList, car*carsList){
+void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run){
     //ad ogni chiamata della funzione, le matrici vengono shiftate verso il basso e questi
     //tre controlli si occupano dei nuovi collectible
-
-    while(bonusList && bonusList->ramp.getYFromStart() < viewPosition + (MAPHEIGHT-1) ){
-
+    clear();
+    for(int i = 0; i < MAPHEIGHT; i++){
+       for(int j = 0; j < MAPWIDTH; j++){
+           if(j==0 || j == MAPWIDTH-1){
+               printw("#");
+           }else{
+               addch(mat[i][j]);
+           }
+        }
+        printw("\n");
     }
-    while(malusList && malusList->obstacle.getYFromStart() < viewPosition + (MAPHEIGHT-1)){
-
+    printw("%d",this->points);
+    
+    for(int i = MAPHEIGHT-1; i >= 0; i--){
+       for(int j = MAPWIDTH-2; j > 0; j--){
+           if(i==0) mat[i][j] = ' ';
+           else mat[i][j] = mat[i-1][j];            
+        }
     }
-    while(carsList && carsList->vehicle.getYFromStart() < viewPosition + (MAPHEIGHT-1)){
 
+    bonus*bonusList = run.getBonusList();
+    malus*malusList = run.getMalusList();
+    car*carsList = run.getCarList();
+
+    while(bonusList!=NULL && bonusList->ramp.getYFromStart() < viewPosition + (MAPHEIGHT-1) ){
+        mat[0][bonusList->ramp.getXFromStart()] = bonusList->ramp.getAppearance();
+        bonusList = bonusList->next;
     }
+    while(malusList!=NULL && malusList->obstacle.getYFromStart() < viewPosition + (MAPHEIGHT-1)){
+        mat[0][malusList->obstacle.getXFromStart()] = malusList->obstacle.getAppearance();
+        malusList = malusList->next;
+    }
+    while(carsList!=NULL && carsList->vehicle.getYFromStart() < viewPosition + (MAPHEIGHT-1)){
+        mat[0][carsList->vehicle.getXFromStart()] = carsList->vehicle.getAppearance();
+        carsList = carsList->next;
+    }
+
+    run.updateCollectiblesLists( (viewPosition + (MAPHEIGHT-1)) );
 
 }////// ATTENZIONE: IMPLEMENTARE MATRICE GEMELLA CON PUNTATORE A COLLECTIBLE PER OTTIMIZZARE
 
@@ -230,15 +259,14 @@ void GameManager::start(LevelManager run, level *currentLevel){
     while(inGame){ 
         //START NEW LEVEL "animations"
         bool levelChanged = false;
+        Map currentMap = run.getCurrentMap();
         initializeMap(mat);
         viewPosition = 0;
         int density = run.generateDensity();
-        bonus*bonusList = currentLevel->map.getBonusList();
-        malus*malusList = currentLevel->map.getMalusList();
-        car*carsList = currentLevel->map.getCarsList();
+        run.initializeCollectiblesLists();
+        bool newLevel = true;
 
-        while(!levelChanged){ // next level condition
-
+        while(!levelChanged && inGame){ // next level condition
             increasePointsBy(1);
             viewPosition++;
             collisionType = collisionControl();
@@ -255,10 +283,13 @@ void GameManager::start(LevelManager run, level *currentLevel){
                     levelChanged = true;
                 }    
             }
-
             if(!levelChanged && inGame ){
                 mapConstruction(density, currentLevel, run, viewPosition);
-                print(mat, currentLevel, viewPosition, bonusList, malusList, carsList);  
+                if(newLevel==true && run.getBonusList()==NULL){ //trovare modo piu elegante
+                    run.initializeCollectiblesLists();
+                }
+                newLevel = false;
+                print(mat, viewPosition, run);  
                 command = getPlayerCommand();
                 if(command == 0) inGame = false;
             }

@@ -45,6 +45,10 @@ level* LevelManager::getCurrentLevel(){
         return this->currentLevel;
 }
 
+Map LevelManager::getCurrentMap(){
+    return this->currentMap;
+}
+
 int LevelManager::generateDensity(){
     int cellsNumber = (MAPWIDTH -2) * MAPHEIGHT;
     int max = cellsNumber / 100 * MAXDENSITY; 
@@ -55,6 +59,37 @@ int LevelManager::generateDensity(){
 
 int LevelManager::generateTime(){
     // 500000 -> 50000
+    int time = STARTINGREFRESHTIME - (this->currentLevel->levelNumber * 10000);
+    if(time < TIMETHRESHOLD) time = TIMETHRESHOLD;
+    return time;
+}
 
-    return 100000;
+void LevelManager::initializeCollectiblesLists(){
+    this->bonusListElement = this->currentMap.getBonusList();
+    this->malusListElement = this->currentMap.getMalusList();
+    this->carsListElement = this->currentMap.getCarsList();
+}
+
+void LevelManager::updateCollectiblesLists(int threshold){
+    while(this->bonusListElement!=NULL && this->bonusListElement->ramp.getYFromStart() < threshold){
+        this->bonusListElement = this->bonusListElement->next;
+    }
+    while(this->malusListElement!=NULL && this->malusListElement->obstacle.getYFromStart() < threshold){
+        this->malusListElement = this->malusListElement->next;
+    }
+    while(this->carsListElement!=NULL && this->carsListElement->vehicle.getYFromStart() < threshold){
+        this->carsListElement = this->carsListElement->next;
+    }
+}
+
+bonus*LevelManager::getBonusList(){
+    return this->bonusListElement;
+}
+
+malus*LevelManager::getMalusList(){
+    return this->malusListElement;
+}
+
+car*LevelManager::getCarList(){
+    return this->carsListElement;
 }

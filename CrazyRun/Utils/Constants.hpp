@@ -9,6 +9,8 @@ const int MAPWIDTH = 31;
 const int MAPHEIGHT = 31;
 const int MAXDENSITY = 20; // percentage of a view surface
 const int THRESHOLDLEVELFORMAXDENSITY = 100;
-const int YCARSPAWN = MAPHEIGHT / 2; 
+const int YCARSPAWN = MAPHEIGHT / 2;
+const int STARTINGREFRESHTIME = 500000;
+const int TIMETHRESHOLD = 50000; 
 
 #endif

@@ -11,8 +11,12 @@ struct level{
 
 class LevelManager{
     private:
-         level *currentLevel = new level;
-         Map currentMap;
+        level *currentLevel = new level;
+        Map currentMap;
+        bonus*bonusListElement;
+        malus*malusListElement;
+        car*carsListElement;
+
     public:
         LevelManager(int startingLevel, int startingPoints);
 
@@ -27,4 +31,16 @@ class LevelManager{
         int generateDensity();
 
         int generateTime();
+
+        Map getCurrentMap();
+
+        void initializeCollectiblesLists();
+
+        void updateCollectiblesLists(int threshold);
+
+        bonus*getBonusList();
+
+        malus*getMalusList();
+
+        car*getCarList();
 };

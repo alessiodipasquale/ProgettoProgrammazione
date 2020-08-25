@@ -13,4 +13,6 @@ class Collectible { //classe padre di tutti gli oggetti che possono essere incon
    public:
         void init();
         int getYFromStart();
+        int getXFromStart();
+        char getAppearance();
 };

@@ -39,7 +39,7 @@ class GameManager {
 
         void mapConstruction(int density, level* currentLevel, LevelManager run, int viewPosition);
 
-        void print(char mat[][MAPWIDTH],level*currentLevel, int viewPosition, bonus*bonusList, malus*malusList, car*carsList);
+        void print(char mat[][MAPWIDTH], int viewPosition, LevelManager run);
 
         void increasePointsBy(int value);
 };
