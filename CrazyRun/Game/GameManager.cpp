@@ -102,6 +102,15 @@ void GameManager::gameOver(){
     cout<<"Game Over"<<endl;
 }
 
+int GameManager::levelControl(int startingPoints){ // 0: gameOver, 1 nextLevel, 2 previousLevel
+    if(this->points >= startingPoints + LEVELUPRANGE) return 1;
+    if(this->points <= startingPoints - LEVELDOWNRANGE){
+        if(this->lv == 1) return 0;
+        else return 2;
+    }
+    return -1;
+}
+
 void GameManager::prevLevel(){
 
 }
@@ -191,16 +200,16 @@ void GameManager::mapConstruction(int density, level*currentLevel, LevelManager 
     if(currentLevel->map.getLastConsideredZone() - viewPosition <= MAPHEIGHT){
         currentLevel->map.updateLastConsideredZone(); //+31
         if(currentLevel->levelNumber > 1){
-            numberOfBonus = density/currentLevel->levelNumber;
+            numberOfBonus = (int)(density / currentLevel->levelNumber)+(int)(density/5);
             if(currentLevel->levelNumber >= 10){
                 int random = rand() % 3; 
                 if(random == 0){ // 33% di possibilità di spawn
                     car = true;
                     numberOfMalus = density - numberOfBonus - 1;
+                    //printw("bon:%d  mal:%d ",numberOfBonus, numberOfMalus) ;
                 }
             }else numberOfMalus = density - numberOfBonus;
-        }else numberOfBonus = density;
-
+        }else numberOfBonus = density + 1;
         currentLevel->map.generateNewZone(numberOfBonus, numberOfMalus, car, currentLevel->levelNumber);    
     }
 }
@@ -232,16 +241,22 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
     malus*malusList = run.getMalusList();
     car*carsList = run.getCarList();
 
-    while(bonusList!=NULL && bonusList->ramp.getYFromStart() < viewPosition + (MAPHEIGHT-1) ){
-        mat[0][bonusList->ramp.getXFromStart()] = bonusList->ramp.getAppearance();
-        bonusList = bonusList->next;
-    }
-    while(malusList!=NULL && malusList->obstacle.getYFromStart() < viewPosition + (MAPHEIGHT-1)){
-        mat[0][malusList->obstacle.getXFromStart()] = malusList->obstacle.getAppearance();
+    while(malusList!=NULL ){
+        if(malusList->obstacle.getYFromStart() == viewPosition + (MAPHEIGHT-1)){
+            mat[0][malusList->obstacle.getXFromStart()] = malusList->obstacle.getAppearance();
+        }
         malusList = malusList->next;
     }
-    while(carsList!=NULL && carsList->vehicle.getYFromStart() < viewPosition + (MAPHEIGHT-1)){
-        mat[0][carsList->vehicle.getXFromStart()] = carsList->vehicle.getAppearance();
+    while(bonusList!=NULL ){
+        if(bonusList->ramp.getYFromStart() == viewPosition + (MAPHEIGHT-1)){
+            mat[0][bonusList->ramp.getXFromStart()] = bonusList->ramp.getAppearance();
+        }
+        bonusList = bonusList->next;
+    }
+    while(carsList!=NULL){
+        if(carsList->vehicle.getYFromStart() == viewPosition + (MAPHEIGHT-1)){
+            mat[0][carsList->vehicle.getXFromStart()] = carsList->vehicle.getAppearance();
+        }
         carsList = carsList->next;
     }
 
@@ -259,11 +274,9 @@ void GameManager::start(LevelManager run, level *currentLevel){
     while(inGame){ 
         //START NEW LEVEL "animations"
         bool levelChanged = false;
-        Map currentMap = run.getCurrentMap();
         initializeMap(mat);
         viewPosition = 0;
         int density = run.generateDensity();
-        run.initializeCollectiblesLists();
         bool newLevel = true;
 
         while(!levelChanged && inGame){ // next level condition
@@ -271,23 +284,15 @@ void GameManager::start(LevelManager run, level *currentLevel){
             viewPosition++;
             collisionType = collisionControl();
             //collision stuff
-
-            if(this->points >= currentLevel->startingPoints + LEVELUPRANGE){
-                currentLevel = run.nextLevel();
-                levelChanged = true;
-            }
-            if(this->points <= currentLevel->startingPoints - LEVELDOWNRANGE){
-                if(this->lv == 1) inGame = false;
-                else {
-                    currentLevel = run.previousLevel();
-                    levelChanged = true;
-                }    
-            }
+            
+            int levelContoller = levelControl(currentLevel->startingPoints);
+            if(levelContoller==0) inGame = false;
+            if(levelContoller==1) {levelChanged = true; currentLevel = run.nextLevel();} 
+            if(levelContoller==2) {levelChanged = true; currentLevel = run.previousLevel();} 
+            
             if(!levelChanged && inGame ){
                 mapConstruction(density, currentLevel, run, viewPosition);
-                if(newLevel==true && run.getBonusList()==NULL){ //trovare modo piu elegante
-                    run.initializeCollectiblesLists();
-                }
+                if(newLevel==true ) run.initializeCollectiblesLists();
                 newLevel = false;
                 print(mat, viewPosition, run);  
                 command = getPlayerCommand();

@@ -7,12 +7,19 @@ void Map::newMalus(int level, int x, int y){
         this->malusHead->obstacle.init(level, x, y);
     }else{
         malus*mHead = this->malusHead;
-        while(mHead){
+        while(mHead->next!=NULL && mHead->next->obstacle.getYFromStart() <= y){
             mHead = mHead->next;
         }
-        mHead = new malus;
-        mHead->next = NULL;
-        mHead->obstacle.init(level, x, y);
+        if(mHead->next==NULL){
+            mHead ->next= new malus;
+            mHead->next->next = NULL;
+            mHead->next->obstacle.init(level, x, y);
+        }else{
+            malus*temp = mHead->next;
+            mHead->next = new malus;
+            mHead->next->next = temp;
+            mHead->next->obstacle.init(level, x,y);
+        }
     }
 }
 
@@ -24,12 +31,19 @@ void Map::newBonus(int level, int x, int y){
         this->bonusHead->ramp.init(level, x, y);
     }else{
         bonus*bHead = this->bonusHead;
-        while(bHead){
+        while(bHead->next!=NULL && bHead->next->ramp.getYFromStart() <= y){
             bHead = bHead->next;
         }
-        bHead = new bonus;
-        bHead->next = NULL;
-        bHead->ramp.init(level, x,y);
+        if(bHead->next==NULL){
+            bHead ->next = new bonus;
+            bHead->next->next = NULL;
+            bHead->next->ramp.init(level, x,y);
+        }else{
+            bonus*temp = bHead->next;
+            bHead->next = new bonus;
+            bHead->next->next = temp;
+            bHead->next->ramp.init(level, x,y);
+        }    
     }
 }
 
@@ -40,16 +54,17 @@ void Map::newCar(int level, int x, int lastConsideredZone){
         this->carHead->vehicle.init(level, x, lastConsideredZone);
     }else{
         car*cHead = this->carHead;
-        while(cHead){
+        while(cHead->next!=NULL){
             cHead = cHead->next;
         }
-        cHead = new car;
-        cHead->next = NULL;
-        cHead->vehicle.init(level, x, lastConsideredZone);
+        cHead->next = new car;
+        cHead->next->next = NULL;
+        cHead->next->vehicle.init(level, x, lastConsideredZone);
     } 
 }
 
 void Map::generateNewZone(int numberOfBonus, int numberOfMalus, bool car, int level){
+
     for (int i=0; i<MAPHEIGHT; i++) {
         for (int j=0; j<MAPWIDTH; j++){
             if(j == 0 || j == MAPWIDTH-1) this->generationMatrix[i][j] = false;
@@ -64,19 +79,6 @@ void Map::generateNewZone(int numberOfBonus, int numberOfMalus, bool car, int le
 
         for (int i=0; i<MAPHEIGHT; i++) this->generationMatrix[i][xCar] = false;
     }
-
-    for (int i=0; i<numberOfBonus; i++){
-        bool ok = false;
-        while(!ok){
-            x = (rand() % MAPWIDTH - 3) + 1;
-            y = (rand() % MAPHEIGHT - 3) + 1;
-            if(this->generationMatrix[y][x]){
-                ok = true;
-                this->generationMatrix[y][x] = false;
-            }  
-        }
-        newBonus(level, x, (this->lastConsideredZone - MAPHEIGHT) + y);
-    }
     for (int i=0; i<numberOfMalus; i++){
         bool ok = false;
         while(!ok){
@@ -88,6 +90,19 @@ void Map::generateNewZone(int numberOfBonus, int numberOfMalus, bool car, int le
             }  
         }
         newMalus(level, x, (this->lastConsideredZone - MAPHEIGHT) + y);
+    }
+
+    for (int i=0; i<numberOfBonus; i++){
+        bool ok = false;
+        while(!ok){
+            x = (rand() % MAPWIDTH - 3) + 1;
+            y = (rand() % MAPHEIGHT - 3) + 1;
+            if(this->generationMatrix[y][x] ){
+                ok = true;
+                this->generationMatrix[y][x] = false;
+            }  
+        }
+        newBonus(level, x, (this->lastConsideredZone - MAPHEIGHT) + y);
     }
 }
 

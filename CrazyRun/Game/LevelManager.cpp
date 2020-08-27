@@ -1,9 +1,9 @@
 #include "LevelManager.hpp"
 //il primo livello lo genera il costruttore 
 LevelManager::LevelManager(int startingLevel, int startingPoints){
+    this->currentLevel = new level;
     this->currentLevel->prev = NULL;
     this->currentLevel->next = NULL;
-    this->currentMap = this->currentLevel->map;
     this->currentLevel->levelNumber = startingLevel;
     this->currentLevel->startingPoints = startingPoints;
 }
@@ -14,7 +14,6 @@ level* LevelManager::newLevel(){
     this->currentLevel->next->prev = this->currentLevel;
     this->currentLevel = this->currentLevel->next;
     this->currentLevel->next = NULL;
-    this->currentMap = this->currentLevel->map;
     this->currentLevel->levelNumber = this->currentLevel->prev->levelNumber + 1;
     this->currentLevel->startingPoints = this->currentLevel->prev->startingPoints + LEVELUPRANGE;
     return this->currentLevel;
@@ -23,7 +22,6 @@ level* LevelManager::newLevel(){
 level* LevelManager::previousLevel(){
     if(this->currentLevel->prev != NULL){
         this->currentLevel = this->currentLevel->prev;
-        this->currentMap = this->currentLevel->map;
         return this->currentLevel;
     }else{
         return NULL; //fare controllo ricezione null
@@ -33,7 +31,6 @@ level* LevelManager::previousLevel(){
 level* LevelManager::nextLevel(){
      if(this->currentLevel->next != NULL){
         this->currentLevel = this->currentLevel->next;
-        this->currentMap = this->currentLevel->map;
         return this->currentLevel;
     }else{
         return this->newLevel();
@@ -43,10 +40,6 @@ level* LevelManager::nextLevel(){
 level* LevelManager::getCurrentLevel(){
      if(this->currentLevel != NULL)
         return this->currentLevel;
-}
-
-Map LevelManager::getCurrentMap(){
-    return this->currentMap;
 }
 
 int LevelManager::generateDensity(){
@@ -65,19 +58,19 @@ int LevelManager::generateTime(){
 }
 
 void LevelManager::initializeCollectiblesLists(){
-    this->bonusListElement = this->currentMap.getBonusList();
-    this->malusListElement = this->currentMap.getMalusList();
-    this->carsListElement = this->currentMap.getCarsList();
+    this->bonusListElement = this->currentLevel->map.getBonusList();
+    this->malusListElement = this->currentLevel->map.getMalusList();
+    this->carsListElement = this->currentLevel->map.getCarsList();
 }
 
 void LevelManager::updateCollectiblesLists(int threshold){
-    while(this->bonusListElement!=NULL && this->bonusListElement->ramp.getYFromStart() < threshold){
+    while(this->bonusListElement!=NULL && this->bonusListElement->next!=NULL && this->bonusListElement->ramp.getYFromStart() < threshold){
         this->bonusListElement = this->bonusListElement->next;
     }
-    while(this->malusListElement!=NULL && this->malusListElement->obstacle.getYFromStart() < threshold){
+    while(this->malusListElement!=NULL && this->malusListElement->next!=NULL && this->malusListElement->obstacle.getYFromStart() < threshold){
         this->malusListElement = this->malusListElement->next;
     }
-    while(this->carsListElement!=NULL && this->carsListElement->vehicle.getYFromStart() < threshold){
+    while(this->carsListElement!=NULL && this->carsListElement->next!=NULL && this->carsListElement->vehicle.getYFromStart() < threshold){
         this->carsListElement = this->carsListElement->next;
     }
 }

@@ -13,7 +13,7 @@ class Map { //penso che sia utile come classe, ad esempio si può implementare u
         void updateLastConsideredZone();
  
     private:
-        int lastConsideredZone;
+        int lastConsideredZone = MAPHEIGHT-1;
 
         bool generationMatrix[MAPHEIGHT][MAPWIDTH];
 

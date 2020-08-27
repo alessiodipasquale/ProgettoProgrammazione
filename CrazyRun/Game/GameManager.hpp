@@ -21,6 +21,8 @@ class GameManager {
 
         int kill();
 
+        int levelControl(int startingPoints);
+
         void prevLevel();
 
         void nextLevel();
