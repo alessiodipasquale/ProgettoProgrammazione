@@ -1,6 +1,14 @@
 #include "../Utils/includes.hpp"
 #include "LevelManager.hpp"
 
+struct player{
+    int numberOfComponents;
+    int xCoordinates[10];
+    int yCoordinates[10];
+    char components[10];
+    player*next;
+};
+
 class GameManager {
     public:
         int lv;
@@ -13,9 +21,11 @@ class GameManager {
 
         void information();
 
-        void prepare();
+        void prepare(player* pl);
 
-        void start(LevelManager run, level *currentLevel);
+        void start(LevelManager run, level *currentLevel, player* pl);
+
+        void playerSelection();
 
         void gameOver();
 
@@ -37,11 +47,11 @@ class GameManager {
 
         char getPlayerCommand();
 
-        void initializeMap(char mat[][MAPWIDTH]);
+        void initializeMap(char mat[][MAPWIDTH], player*pl);
 
         void mapConstruction(int density, level* currentLevel, LevelManager run, int viewPosition);
 
-        void print(char mat[][MAPWIDTH], int viewPosition, LevelManager run);
+        void print(char mat[][MAPWIDTH], int viewPosition, LevelManager run, player*pl);
 
         void increasePointsBy(int value);
 };

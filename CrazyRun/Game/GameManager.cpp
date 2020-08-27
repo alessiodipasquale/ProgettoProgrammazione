@@ -12,9 +12,9 @@ void GameManager::mainMenu() {
         cout<<"*                       Progetto programmazione                    *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"*                                                                  *"<<endl;
-        cout<<"*                                 ^                                *"<<endl;
-        cout<<"*                               < P >                              *"<<endl;
-        cout<<"*                                 v                                *"<<endl;
+        cout<<"*                              __________                          *"<<endl;
+        cout<<"*                               CrazyRun                           *"<<endl;
+        cout<<"*                              ----------                          *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"*                         1. Avvia il gioco                        *"<<endl;
@@ -32,7 +32,8 @@ void GameManager::mainMenu() {
         {
         case 1:
             valid = true;
-            prepare();
+
+            playerSelection();
             break;
         case 2:
             valid = true;
@@ -55,10 +56,10 @@ void GameManager::information() {
         cout<<"*                     Progetto di programmazione                   *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"*                               Autori                             *"<<endl;
-        cout<<"*                         Di Pasquale Alessio                      *"<<endl;
         cout<<"*                         Colamonaco Stefano                       *"<<endl;
+        cout<<"*                         Di Pasquale Alessio                      *"<<endl;
         cout<<"*                                                                  *"<<endl;
-        cout<<"*               (So che non e' centrato, giuro che fixo)           *"<<endl;
+        cout<<"*                                                                  *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"*                           1. Torna al menu                       *"<<endl;
         cout<<"*                               2. Esci                            *"<<endl;
@@ -82,8 +83,43 @@ void GameManager::information() {
         }
     }
 } 
+void GameManager::playerSelection(){
+    int response;
+    player*pl = new player;
+    do{
+        cleanScreen();
+        cout<<"select a skin"<<endl;
+        cin>>response;
+    }while(response != 1 && response != 2 && response != 3);
 
-void GameManager:: prepare(){
+    if(response == 1){
+        pl->numberOfComponents = NUMBEROFCOMPONENTS_1;
+        for(int i = 0; i<NUMBEROFCOMPONENTS_1;i++){
+            pl->xCoordinates[i] = XCOORDINATES_1[i];
+            pl->yCoordinates[i] = YCOORDINATES_1[i];
+            pl->components[i] = COMPONENTS_1[i];
+        }
+    }else{
+        if(response==2){
+        pl->numberOfComponents = NUMBEROFCOMPONENTS_2;
+        for(int i = 0; i<NUMBEROFCOMPONENTS_2;i++){
+            pl->xCoordinates[i] = XCOORDINATES_2[i];
+            pl->yCoordinates[i] = YCOORDINATES_2[i];
+            pl->components[i] = COMPONENTS_2[i];
+        }
+        }else{
+            pl->numberOfComponents = NUMBEROFCOMPONENTS_3;
+            for(int i = 0; i<NUMBEROFCOMPONENTS_3;i++){
+                pl->xCoordinates[i] = XCOORDINATES_3[i];
+                pl->yCoordinates[i] = YCOORDINATES_3[i];
+                pl->components[i] = COMPONENTS_3[i];
+            }
+        }
+    }
+    prepare(pl);
+}
+
+void GameManager:: prepare(player* pl){
     cleanScreen();
 
     resetLv();
@@ -94,7 +130,7 @@ void GameManager:: prepare(){
     initscr();
     noecho();
     nodelay(stdscr, true);
-    start(run, currentLevel); 
+    start(run, currentLevel,pl); 
     kill();
 }
 
@@ -185,12 +221,18 @@ char GameManager::getPlayerCommand(){
     }    
 }
 
-void GameManager::initializeMap(char mat[][MAPWIDTH]){
+void GameManager::initializeMap(char mat[][MAPWIDTH],player*pl){
     for(int i=0; i<MAPHEIGHT; i++){
         for(int j=0; j<MAPWIDTH; j++){
             mat[i][j] = ' ';
         }
     }
+    for(int i=0;i<pl->numberOfComponents;i++){
+        int x = pl->xCoordinates[i];
+        int y = pl->yCoordinates[i];
+        mat[y][x] = pl->components[i];
+    }
+
 }
 
 void GameManager::mapConstruction(int density, level*currentLevel, LevelManager run, int viewPosition){
@@ -214,7 +256,7 @@ void GameManager::mapConstruction(int density, level*currentLevel, LevelManager 
     }
 }
 
-void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run){
+void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run, player*pl){
     //ad ogni chiamata della funzione, le matrici vengono shiftate verso il basso e questi
     //tre controlli si occupano dei nuovi collectible
     clear();
@@ -230,11 +272,22 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
     }
     printw("%d",this->points);
     
+    for(int i=0;i<pl->numberOfComponents;i++){
+        int x = pl->xCoordinates[i];
+        int y = pl->yCoordinates[i];
+        mat[y][x] = ' ';
+    }
+
     for(int i = MAPHEIGHT-1; i >= 0; i--){
        for(int j = MAPWIDTH-2; j > 0; j--){
            if(i==0) mat[i][j] = ' ';
            else mat[i][j] = mat[i-1][j];            
         }
+    }
+    for(int i=0;i<pl->numberOfComponents;i++){
+        int x = pl->xCoordinates[i];
+        int y = pl->yCoordinates[i];
+        mat[y][x] = pl->components[i];
     }
 
     bonus*bonusList = run.getBonusList();
@@ -264,17 +317,18 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
 
 }////// ATTENZIONE: IMPLEMENTARE MATRICE GEMELLA CON PUNTATORE A COLLECTIBLE PER OTTIMIZZARE
 
-void GameManager::start(LevelManager run, level *currentLevel){
+void GameManager::start(LevelManager run, level *currentLevel, player*pl){
     char command = -1;
     bool inGame = true;
     int collisionType;
     char mat[MAPHEIGHT][MAPWIDTH];
     int viewPosition;
+    player*backupPlayer = pl;
 
     while(inGame){ 
         //START NEW LEVEL "animations"
         bool levelChanged = false;
-        initializeMap(mat);
+        initializeMap(mat,backupPlayer);
         viewPosition = 0;
         int density = run.generateDensity();
         bool newLevel = true;
@@ -294,7 +348,7 @@ void GameManager::start(LevelManager run, level *currentLevel){
                 mapConstruction(density, currentLevel, run, viewPosition);
                 if(newLevel==true ) run.initializeCollectiblesLists();
                 newLevel = false;
-                print(mat, viewPosition, run);  
+                print(mat, viewPosition, run, pl);  
                 command = getPlayerCommand();
                 if(command == 0) inGame = false;
             }
