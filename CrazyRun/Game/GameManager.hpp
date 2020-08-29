@@ -6,7 +6,6 @@ struct player{
     int xCoordinates[10];
     int yCoordinates[10];
     char components[10];
-    player*next;
 };
 
 class GameManager {
@@ -46,6 +45,8 @@ class GameManager {
         int collisionControl();
 
         char getPlayerCommand();
+
+        void modifyPlayerPosition(char command, player*pl);
 
         void initializeMap(char mat[][MAPWIDTH], player*pl);
 

@@ -74,7 +74,7 @@ void Map::generateNewZone(int numberOfBonus, int numberOfMalus, bool car, int le
 
     int x, y, xCar = -1;
     if(car) {
-        xCar = (rand() % MAPWIDTH - 3) + 1;  //per evitare che la macchina finisca sui bordi
+        xCar = (rand() % MAPWIDTH - 4) + 2;  //per evitare che la macchina finisca sui bordi
         newCar(level,  xCar, this->lastConsideredZone);
 
         for (int i=0; i<MAPHEIGHT; i++) this->generationMatrix[i][xCar] = false;
@@ -82,8 +82,8 @@ void Map::generateNewZone(int numberOfBonus, int numberOfMalus, bool car, int le
     for (int i=0; i<numberOfMalus; i++){
         bool ok = false;
         while(!ok){
-            x = (rand() % MAPWIDTH - 3) + 1;
-            y = (rand() % MAPHEIGHT - 3) + 1;
+            x = (rand() % (MAPWIDTH - 4)) + 2;
+            y = (rand() % (MAPHEIGHT - 3)) + 1;
             if(this->generationMatrix[y][x]){
                 ok = true;
                 this->generationMatrix[y][x] = false;
@@ -95,8 +95,8 @@ void Map::generateNewZone(int numberOfBonus, int numberOfMalus, bool car, int le
     for (int i=0; i<numberOfBonus; i++){
         bool ok = false;
         while(!ok){
-            x = (rand() % MAPWIDTH - 3) + 1;
-            y = (rand() % MAPHEIGHT - 3) + 1;
+            x = (rand() % (MAPWIDTH - 4)) + 2;
+            y = (rand() % (MAPHEIGHT - 3)) + 1;
             if(this->generationMatrix[y][x] ){
                 ok = true;
                 this->generationMatrix[y][x] = false;

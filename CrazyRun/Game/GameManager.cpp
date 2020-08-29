@@ -221,6 +221,66 @@ char GameManager::getPlayerCommand(){
     }    
 }
 
+void GameManager::modifyPlayerPosition(char command, player*pl){
+    bool ok = true;
+    if(command == 'u'){
+        for(int i=0; i<pl->numberOfComponents && ok;i++){
+            if(pl->yCoordinates[i]-1 < 0){
+                ok = false; 
+            }
+        }
+        if(ok){
+            for(int i=0; i<pl->numberOfComponents;i++){
+                pl->yCoordinates[i] = pl->yCoordinates[i]-1 ;
+            }
+        }
+    }else{
+        if(command == 'd'){
+            for(int i=0; i<pl->numberOfComponents && ok;i++){
+                if(pl->yCoordinates[i]+1 >= MAPHEIGHT){
+                    ok = false; 
+                }
+            }
+            if(ok){
+                for(int i=0; i<pl->numberOfComponents;i++){
+                    pl->yCoordinates[i] = pl->yCoordinates[i]+1;
+                }
+            }
+        }else{
+            if(command == 'l'){
+                for(int i=0; i<pl->numberOfComponents && ok;i++){
+                    if(pl->xCoordinates[i]-2 <0 ){
+                        ok = false; 
+                    }
+                }
+                if(ok){
+                    for(int i=0; i<pl->numberOfComponents;i++){
+                        pl->xCoordinates[i] = pl->xCoordinates[i]-2;
+                    }
+                }
+            }else{
+                if(command == 'r'){
+                    for(int i=0; i<pl->numberOfComponents && ok;i++){
+                        if(pl->xCoordinates[i]+2 >= MAPWIDTH){
+                        ok = false; 
+                        }
+                    }
+                    if(ok){
+                        for(int i=0; i<pl->numberOfComponents;i++){
+                            pl->xCoordinates[i] = pl->xCoordinates[i]+2;
+                        }
+                    }
+                }else{
+                    printw("Error: wrong command");
+                }
+            }
+            
+        }
+    }
+    
+
+}
+
 void GameManager::initializeMap(char mat[][MAPWIDTH],player*pl){
     for(int i=0; i<MAPHEIGHT; i++){
         for(int j=0; j<MAPWIDTH; j++){
@@ -259,6 +319,18 @@ void GameManager::mapConstruction(int density, level*currentLevel, LevelManager 
 void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run, player*pl){
     //ad ogni chiamata della funzione, le matrici vengono shiftate verso il basso e questi
     //tre controlli si occupano dei nuovi collectible
+    for(int i = MAPHEIGHT-1; i >= 0; i--){
+       for(int j = MAPWIDTH-2; j > 0; j--){
+           if(i==0) mat[i][j] = ' ';
+           else mat[i][j] = mat[i-1][j];            
+        }
+    }
+    for(int i=0;i<pl->numberOfComponents;i++){
+        int x = pl->xCoordinates[i];
+        int y = pl->yCoordinates[i];
+        mat[y][x] = pl->components[i];
+    }
+    
     clear();
     for(int i = 0; i < MAPHEIGHT; i++){
        for(int j = 0; j < MAPWIDTH; j++){
@@ -271,24 +343,12 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
         printw("\n");
     }
     printw("%d",this->points);
-    
-    for(int i=0;i<pl->numberOfComponents;i++){
-        int x = pl->xCoordinates[i];
-        int y = pl->yCoordinates[i];
-        mat[y][x] = ' ';
-    }
 
-    for(int i = MAPHEIGHT-1; i >= 0; i--){
-       for(int j = MAPWIDTH-2; j > 0; j--){
-           if(i==0) mat[i][j] = ' ';
-           else mat[i][j] = mat[i-1][j];            
-        }
-    }
     for(int i=0;i<pl->numberOfComponents;i++){
-        int x = pl->xCoordinates[i];
-        int y = pl->yCoordinates[i];
-        mat[y][x] = pl->components[i];
-    }
+                    int x = pl->xCoordinates[i];
+                    int y = pl->yCoordinates[i];
+                    mat[y][x] = ' ';
+                }
 
     bonus*bonusList = run.getBonusList();
     malus*malusList = run.getMalusList();
@@ -351,6 +411,8 @@ void GameManager::start(LevelManager run, level *currentLevel, player*pl){
                 print(mat, viewPosition, run, pl);  
                 command = getPlayerCommand();
                 if(command == 0) inGame = false;
+                else if(command!= -1) modifyPlayerPosition(command, pl);
+                //if(command!='u' && command!='d')modifyPlayerPosition('d',pl);
             }
             int time = run.generateTime();
             usleep(time); 
