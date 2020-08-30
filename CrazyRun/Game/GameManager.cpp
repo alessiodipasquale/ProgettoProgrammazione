@@ -9,13 +9,17 @@ void GameManager::mainMenu() {
     while(!valid){
         cleanScreen();
         cout<<"********************************************************************"<<endl;
-        cout<<"*                       Progetto programmazione                    *"<<endl;
+        cout<<"*                    Progetto di programmazione                    *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"*                                                                  *"<<endl;
-        cout<<"*                              __________                          *"<<endl;
-        cout<<"*                               CrazyRun                           *"<<endl;
-        cout<<"*                              ----------                          *"<<endl;
-        cout<<"*                                                                  *"<<endl;
+        cout<<"*             _____                    ______                      *"<<endl;
+        cout<<"*            /  __ \\                   | ___ \\                     *"<<endl;
+        cout<<"*            | /  \\/_ __ __ _ _____   _| |_/ /   _ _ __            *"<<endl;
+        cout<<"*            | |   | '__/ _` |_  / | | |    / | | | '_ \\           *"<<endl;
+        cout<<"*            | \\__/\\ | | (_| |/ /| |_| | |\\ \\ |_| | | | |          *"<<endl;
+        cout<<"*             \\____/_|  \\__,_/___|\\__, \\_| \\_\\__,_|_| |_|          *"<<endl;
+        cout<<"*                                  __/ |                           *"<<endl;
+        cout<<"*                                 |___/                            *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"*                         1. Avvia il gioco                        *"<<endl;
         cout<<"*                                                                  *"<<endl;
@@ -119,6 +123,15 @@ void GameManager::playerSelection(){
     prepare(pl);
 }
 
+void GameManager::initializePlayer(player*pl, player*backupPlayer){
+    pl->numberOfComponents = backupPlayer->numberOfComponents;
+    for(int i=0;i<backupPlayer->numberOfComponents;i++){
+        pl->components[i] = backupPlayer->components[i];
+        pl->xCoordinates[i] = backupPlayer->xCoordinates[i];
+        pl->yCoordinates[i] = backupPlayer->yCoordinates[i];
+    }
+}
+
 void GameManager:: prepare(player* pl){
     cleanScreen();
 
@@ -177,7 +190,7 @@ int GameManager::collision(){
     }else return -1;
 }
 
-int GameManager::collisionControl(){
+int GameManager::collisionControl(player*pl){
     
 }
 
@@ -281,10 +294,11 @@ void GameManager::modifyPlayerPosition(char command, player*pl){
 
 }
 
-void GameManager::initializeMap(char mat[][MAPWIDTH],player*pl){
+void GameManager::initializeMap(char mat[][MAPWIDTH],player*pl, Collectible* collectibleMap[][MAPWIDTH]){
     for(int i=0; i<MAPHEIGHT; i++){
         for(int j=0; j<MAPWIDTH; j++){
             mat[i][j] = ' ';
+            collectibleMap[i][j] = NULL;
         }
     }
     for(int i=0;i<pl->numberOfComponents;i++){
@@ -316,13 +330,23 @@ void GameManager::mapConstruction(int density, level*currentLevel, LevelManager 
     }
 }
 
-void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run, player*pl){
+void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run, player*pl, Collectible*collectiblesMap[][MAPWIDTH]){
     //ad ogni chiamata della funzione, le matrici vengono shiftate verso il basso e questi
     //tre controlli si occupano dei nuovi collectible
     for(int i = MAPHEIGHT-1; i >= 0; i--){
        for(int j = MAPWIDTH-2; j > 0; j--){
-           if(i==0) mat[i][j] = ' ';
-           else mat[i][j] = mat[i-1][j];            
+           if(i==0) {
+               mat[i][j] = ' ';
+               collectiblesMap[i][j] = NULL; 
+           }else {
+                if(mat[i-1][j]=='c' && i+1 < MAPHEIGHT){
+                    mat[i+1][j] = mat[i-1][j];
+                    collectiblesMap[i+1][j] = collectiblesMap[i-1][j];  
+                }else{
+                    mat[i][j] = mat[i-1][j];
+                    collectiblesMap[i][j] = collectiblesMap[i-1][j];
+                }
+           }          
         }
     }
     for(int i=0;i<pl->numberOfComponents;i++){
@@ -357,18 +381,21 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
     while(malusList!=NULL ){
         if(malusList->obstacle.getYFromStart() == viewPosition + (MAPHEIGHT-1)){
             mat[0][malusList->obstacle.getXFromStart()] = malusList->obstacle.getAppearance();
+            collectiblesMap[0][malusList->obstacle.getXFromStart()] = &(malusList->obstacle);
         }
         malusList = malusList->next;
     }
     while(bonusList!=NULL ){
         if(bonusList->ramp.getYFromStart() == viewPosition + (MAPHEIGHT-1)){
             mat[0][bonusList->ramp.getXFromStart()] = bonusList->ramp.getAppearance();
+            collectiblesMap[0][bonusList->ramp.getXFromStart()] = &(bonusList->ramp);
         }
         bonusList = bonusList->next;
     }
     while(carsList!=NULL){
         if(carsList->vehicle.getYFromStart() == viewPosition + (MAPHEIGHT-1)){
             mat[0][carsList->vehicle.getXFromStart()] = carsList->vehicle.getAppearance();
+            collectiblesMap[0][carsList->vehicle.getXFromStart()] = &(carsList->vehicle);
         }
         carsList = carsList->next;
     }
@@ -377,26 +404,29 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
 
 }////// ATTENZIONE: IMPLEMENTARE MATRICE GEMELLA CON PUNTATORE A COLLECTIBLE PER OTTIMIZZARE
 
-void GameManager::start(LevelManager run, level *currentLevel, player*pl){
+void GameManager::start(LevelManager run, level *currentLevel, player*backupPlayer){
     char command = -1;
     bool inGame = true;
     int collisionType;
     char mat[MAPHEIGHT][MAPWIDTH];
+    Collectible *collectiblesMap[MAPHEIGHT][MAPWIDTH];
     int viewPosition;
-    player*backupPlayer = pl;
+    player*pl = new player;
 
     while(inGame){ 
-        //START NEW LEVEL "animations"
+        initializePlayer(pl, backupPlayer);
+        //START NEW LEVEL "animescions"
         bool levelChanged = false;
-        initializeMap(mat,backupPlayer);
+        initializeMap(mat,backupPlayer, collectiblesMap);
+        initializePlayer(pl, backupPlayer);
         viewPosition = 0;
         int density = run.generateDensity();
         bool newLevel = true;
 
         while(!levelChanged && inGame){ // next level condition
-            increasePointsBy(1);
+            increasePointsBy(50);
             viewPosition++;
-            collisionType = collisionControl();
+            collisionType = collisionControl(pl);
             //collision stuff
             
             int levelContoller = levelControl(currentLevel->startingPoints);
@@ -408,7 +438,7 @@ void GameManager::start(LevelManager run, level *currentLevel, player*pl){
                 mapConstruction(density, currentLevel, run, viewPosition);
                 if(newLevel==true ) run.initializeCollectiblesLists();
                 newLevel = false;
-                print(mat, viewPosition, run, pl);  
+                print(mat, viewPosition, run, pl, collectiblesMap);
                 command = getPlayerCommand();
                 if(command == 0) inGame = false;
                 else if(command!= -1) modifyPlayerPosition(command, pl);
@@ -417,6 +447,7 @@ void GameManager::start(LevelManager run, level *currentLevel, player*pl){
             int time = run.generateTime();
             usleep(time); 
         }
+        while(getch()!=-1); //per pulire eventuali comandi rimasti
     }
     gameOver();
 }

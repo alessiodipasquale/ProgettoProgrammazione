@@ -22,9 +22,11 @@ class GameManager {
 
         void prepare(player* pl);
 
-        void start(LevelManager run, level *currentLevel, player* pl);
+        void start(LevelManager run, level *currentLevel, player* backupPlayer);
 
         void playerSelection();
+
+        void initializePlayer(player*pl, player*backupPlayer);
 
         void gameOver();
 
@@ -42,17 +44,17 @@ class GameManager {
 
         int collision();
 
-        int collisionControl();
+        int collisionControl(player*pl);
 
         char getPlayerCommand();
 
         void modifyPlayerPosition(char command, player*pl);
 
-        void initializeMap(char mat[][MAPWIDTH], player*pl);
+        void initializeMap(char mat[][MAPWIDTH], player*pl, Collectible*collectiblesMap[][MAPWIDTH]);
 
         void mapConstruction(int density, level* currentLevel, LevelManager run, int viewPosition);
 
-        void print(char mat[][MAPWIDTH], int viewPosition, LevelManager run, player*pl);
+        void print(char mat[][MAPWIDTH], int viewPosition, LevelManager run, player*pl, Collectible*collectiblesMap[][MAPWIDTH]);
 
         void increasePointsBy(int value);
 };
