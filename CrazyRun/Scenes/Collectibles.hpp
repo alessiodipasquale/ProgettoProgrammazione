@@ -4,7 +4,6 @@
 class Ramp : public Collectible { //esempio di oggetto "raccoglibile"
     private:
         int baseValue;
-        int power;
     public:
         Ramp();
         void init(int level, int x, int y);
@@ -13,7 +12,6 @@ class Ramp : public Collectible { //esempio di oggetto "raccoglibile"
 class Obstacle : public Collectible {
     private:
         int baseValue;
-        int power;
     public: 
         Obstacle();
         void init(int level, int x, int y);

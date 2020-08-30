@@ -148,15 +148,15 @@ void GameManager:: prepare(player* pl){
 }
 
 void GameManager::gameOver(){
+    while(getch()!=-1);
+    endwin();
     cout<<"Game Over"<<endl;
 }
 
 int GameManager::levelControl(int startingPoints){ // 0: gameOver, 1 nextLevel, 2 previousLevel
+    if(this->lv == 1 && this->points < 0 ) return 0;
     if(this->points >= startingPoints + LEVELUPRANGE) return 1;
-    if(this->points <= startingPoints - LEVELDOWNRANGE){
-        if(this->lv == 1) return 0;
-        else return 2;
-    }
+    if(this->points <= startingPoints - LEVELDOWNRANGE) return 2;
     return -1;
 }
 
@@ -180,7 +180,7 @@ int GameManager::kill(){
     return 0;
 }
 
-void GameManager::increasePointsBy(int value){
+void GameManager::modifyPointsBy(int value){
     this->points = this->points + value;
 };
 
@@ -190,8 +190,18 @@ int GameManager::collision(){
     }else return -1;
 }
 
-int GameManager::collisionControl(player*pl){
-    
+int GameManager::collisionControl(player*pl, Collectible*collectiblesMap[][MAPWIDTH]){
+    bool wall = false;
+    for(int i=0;i<pl->numberOfComponents;i++){
+        if( (pl->xCoordinates[i] == 0 || pl->xCoordinates[i] == MAPWIDTH-1) && !wall ){
+            modifyPointsBy(WALLPENALITY);
+            wall = true;
+        }
+        if(collectiblesMap[pl->yCoordinates[i]][pl->xCoordinates[i]]) {
+            modifyPointsBy(collectiblesMap[pl->yCoordinates[i]][pl->xCoordinates[i]]->getPower());
+            collectiblesMap[pl->yCoordinates[i]][pl->xCoordinates[i]] = NULL;
+        }    
+    }
 }
 
 char GameManager::getPlayerCommand(){
@@ -321,9 +331,9 @@ void GameManager::mapConstruction(int density, level*currentLevel, LevelManager 
                 int random = rand() % 3; 
                 if(random == 0){ // 33% di possibilità di spawn
                     car = true;
-                    numberOfMalus = density - numberOfBonus - 1;
+                    numberOfMalus = density - (numberOfBonus + 1);
                     //printw("bon:%d  mal:%d ",numberOfBonus, numberOfMalus) ;
-                }
+                }else numberOfMalus = density - numberOfBonus;
             }else numberOfMalus = density - numberOfBonus;
         }else numberOfBonus = density + 1;
         currentLevel->map.generateNewZone(numberOfBonus, numberOfMalus, car, currentLevel->levelNumber);    
@@ -339,7 +349,7 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
                mat[i][j] = ' ';
                collectiblesMap[i][j] = NULL; 
            }else {
-                if(mat[i-1][j]=='c' && i+1 < MAPHEIGHT){
+                if( collectiblesMap[i-1][j] && collectiblesMap[i-1][j]->getMovement() && i+1 < MAPHEIGHT){
                     mat[i+1][j] = mat[i-1][j];
                     collectiblesMap[i+1][j] = collectiblesMap[i-1][j];  
                 }else{
@@ -366,7 +376,7 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
         }
         printw("\n");
     }
-    printw("%d",this->points);
+    printw("score: %d     level: %d",this->points, this->lv);
 
     for(int i=0;i<pl->numberOfComponents;i++){
                     int x = pl->xCoordinates[i];
@@ -389,6 +399,7 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
         if(bonusList->ramp.getYFromStart() == viewPosition + (MAPHEIGHT-1)){
             mat[0][bonusList->ramp.getXFromStart()] = bonusList->ramp.getAppearance();
             collectiblesMap[0][bonusList->ramp.getXFromStart()] = &(bonusList->ramp);
+
         }
         bonusList = bonusList->next;
     }
@@ -414,8 +425,10 @@ void GameManager::start(LevelManager run, level *currentLevel, player*backupPlay
     player*pl = new player;
 
     while(inGame){ 
+                //START NEW LEVEL "animescions"
+        this->lv = currentLevel->levelNumber;
+        this->points = currentLevel->startingPoints;
         initializePlayer(pl, backupPlayer);
-        //START NEW LEVEL "animescions"
         bool levelChanged = false;
         initializeMap(mat,backupPlayer, collectiblesMap);
         initializePlayer(pl, backupPlayer);
@@ -424,9 +437,9 @@ void GameManager::start(LevelManager run, level *currentLevel, player*backupPlay
         bool newLevel = true;
 
         while(!levelChanged && inGame){ // next level condition
-            increasePointsBy(50);
+            modifyPointsBy(5);
             viewPosition++;
-            collisionType = collisionControl(pl);
+            collisionType = collisionControl(pl, collectiblesMap);
             //collision stuff
             
             int levelContoller = levelControl(currentLevel->startingPoints);

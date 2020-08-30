@@ -13,6 +13,7 @@ const int THRESHOLDLEVELFORMAXDENSITY = 100;
 const int YCARSPAWN = MAPHEIGHT / 2;
 const int STARTINGREFRESHTIME = 300000;
 const int TIMETHRESHOLD = 30000; 
+const int WALLPENALITY = -200;
 
 /////////////////////////////////////////////SKIN
 const int NUMBEROFCOMPONENTS_1 = 4;

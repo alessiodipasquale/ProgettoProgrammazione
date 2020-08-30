@@ -44,7 +44,7 @@ class GameManager {
 
         int collision();
 
-        int collisionControl(player*pl);
+        int collisionControl(player*pl, Collectible*collectiblesMap[][MAPWIDTH]);
 
         char getPlayerCommand();
 
@@ -56,5 +56,5 @@ class GameManager {
 
         void print(char mat[][MAPWIDTH], int viewPosition, LevelManager run, player*pl, Collectible*collectiblesMap[][MAPWIDTH]);
 
-        void increasePointsBy(int value);
+        void modifyPointsBy(int value);
 };
