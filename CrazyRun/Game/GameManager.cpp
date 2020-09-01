@@ -21,6 +21,7 @@ void GameManager::mainMenu() {
         cout<<"*                                  __/ |                           *"<<endl;
         cout<<"*                                 |___/                            *"<<endl;
         cout<<"*                                                                  *"<<endl;
+        cout<<"*                                                                  *"<<endl;
         cout<<"*                         1. Avvia il gioco                        *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"*                      2. Informazioni e crediti                   *"<<endl;
@@ -36,7 +37,6 @@ void GameManager::mainMenu() {
         {
         case 1:
             valid = true;
-
             playerSelection();
             break;
         case 2:
@@ -65,8 +65,8 @@ void GameManager::information() {
         cout<<"*                                                                  *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"*                                                                  *"<<endl;
-        cout<<"*                           1. Torna al menu                       *"<<endl;
-        cout<<"*                               2. Esci                            *"<<endl;
+        cout<<"*                           1. Torna al menu'                      *"<<endl;
+        cout<<"*                              2. Esci                             *"<<endl;
         cout<<"********************************************************************"<<endl;
         cout<<endl;
         cout<<"Seleziona: ";
@@ -92,7 +92,23 @@ void GameManager::playerSelection(){
     player*pl = new player;
     do{
         cleanScreen();
-        cout<<"select a skin"<<endl;
+        cout<<endl;
+        cout<<"|*******************************************************************|"<<endl;
+        cout<<"|*|                   |*|                   |*|                   |*|"<<endl;
+        cout<<"|*|                   |*|                   |*|                   |*|"<<endl;
+        cout<<"|*|                   |*|                   |*|                   |*|"<<endl;
+        cout<<"|*|                   |*|                   |*|                   |*|"<<endl;
+        cout<<"|*|                   |*|                   |*|                   |*|"<<endl;
+        cout<<"|*|         ^         |*|        O-O        |*|        /-\\        |*|"<<endl;
+        cout<<"|*|        O-O        |*|        O-O        |*|        O-O        |*|"<<endl;
+        cout<<"|*|                   |*|                   |*|                   |*|"<<endl;
+        cout<<"|*|                   |*|                   |*|                   |*|"<<endl;
+        cout<<"|*|                   |*|                   |*|                   |*|"<<endl;
+        cout<<"|*|                   |*|                   |*|                   |*|"<<endl;
+        cout<<"|*|         1         |*|         2         |*|         3         |*|"<<endl;
+        cout<<" *******************************************************************"<<endl;
+        cout<<endl;
+        cout<<" select a skin: ";
         cin>>response;
     }while(response != 1 && response != 2 && response != 3);
 
@@ -143,6 +159,7 @@ void GameManager:: prepare(player* pl){
     initscr();
     noecho();
     nodelay(stdscr, true);
+    curs_set(0);
     start(run, currentLevel,pl); 
     kill();
 }
@@ -150,7 +167,19 @@ void GameManager:: prepare(player* pl){
 void GameManager::gameOver(){
     while(getch()!=-1);
     endwin();
-    cout<<"Game Over"<<endl;
+    cout<<"\n\n\n\n"<<endl;
+    cout<<" ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄       ▄▄  ▄▄▄▄▄▄▄▄▄▄▄       ▄▄▄▄▄▄▄▄▄▄▄  ▄               ▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  "<<endl;
+    cout<<"▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░▌     ▐░░▌▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▌▐░▌             ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌ "<<endl;
+    cout<<"▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌▐░▌░▌   ▐░▐░▌▐░█▀▀▀▀▀▀▀▀▀      ▐░█▀▀▀▀▀▀▀█░▌ ▐░▌           ▐░▌ ▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌ "<<endl;
+    cout<<"▐░▌          ▐░▌       ▐░▌▐░▌▐░▌ ▐░▌▐░▌▐░▌               ▐░▌       ▐░▌  ▐░▌         ▐░▌  ▐░▌          ▐░▌       ▐░▌ "<<endl;
+    cout<<"▐░▌ ▄▄▄▄▄▄▄▄ ▐░█▄▄▄▄▄▄▄█░▌▐░▌ ▐░▐░▌ ▐░▌▐░█▄▄▄▄▄▄▄▄▄      ▐░▌       ▐░▌   ▐░▌       ▐░▌   ▐░█▄▄▄▄▄▄▄▄▄ ▐░█▄▄▄▄▄▄▄█░▌ "<<endl;
+    cout<<"▐░▌▐░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌  ▐░▌  ▐░▌▐░░░░░░░░░░░▌     ▐░▌       ▐░▌    ▐░▌     ▐░▌    ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌ "<<endl;
+    cout<<"▐░▌ ▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀█░▌▐░▌   ▀   ▐░▌▐░█▀▀▀▀▀▀▀▀▀      ▐░▌       ▐░▌     ▐░▌   ▐░▌     ▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀█░█▀▀  "<<endl;
+    cout<<"▐░▌       ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░▌               ▐░▌       ▐░▌      ▐░▌ ▐░▌      ▐░▌          ▐░▌     ▐░▌   "<<endl;
+    cout<<"▐░█▄▄▄▄▄▄▄█░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄▄▄      ▐░█▄▄▄▄▄▄▄█░▌       ▐░▐░▌       ▐░█▄▄▄▄▄▄▄▄▄ ▐░▌      ▐░▌  "<<endl;
+    cout<<"▐░░░░░░░░░░░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▌        ▐░▌        ▐░░░░░░░░░░░▌▐░▌       ▐░▌ "<<endl;
+    cout<<" ▀▀▀▀▀▀▀▀▀▀▀  ▀         ▀  ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀       ▀▀▀▀▀▀▀▀▀▀▀          ▀          ▀▀▀▀▀▀▀▀▀▀▀  ▀         ▀  "<<endl;                                                
+    cout<<"\n\n\n\n"<<endl;
 }
 
 int GameManager::levelControl(int startingPoints){ // 0: gameOver, 1 nextLevel, 2 previousLevel
@@ -219,7 +248,7 @@ char GameManager::getPlayerCommand(){
             case 'D':
                 return 'l';
             default:
-                cout<<"Error"<<endl;   
+                break;   
         }
     } else {
         if(c1 == 'q'){
@@ -236,6 +265,7 @@ char GameManager::getPlayerCommand(){
                         initscr();
                         noecho();
                         nodelay(stdscr, true);
+                        curs_set(0);
                         return -1;
                     }else cout<<"wrong key pressed"<<endl;  
                 }
@@ -364,8 +394,9 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
         int y = pl->yCoordinates[i];
         mat[y][x] = pl->components[i];
     }
-    
+
     clear();
+    printw("-----------------------------------------------------------------------\n|");
     for(int i = 0; i < MAPHEIGHT; i++){
        for(int j = 0; j < MAPWIDTH; j++){
            if(j==0 || j == MAPWIDTH-1){
@@ -374,9 +405,39 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
                addch(mat[i][j]);
            }
         }
-        printw("\n");
+        printw("|");
+        if(i==3){ 
+            for(int k=0;k<MAPTHRESHOLD-MAPWIDTH;k++) printw(" ");
+            printw("score: %d", this->points);
+            int tmp = this->points;
+            int count = 0; 
+            while(tmp>=10){
+                tmp = tmp/10;
+                count++;
+            }
+            for(int k=0;k<SCREENWIDTH-(MAPTHRESHOLD+11)-count;k++) printw(" ");
+            printw("|");
+
+        }else{
+            if(i==5) {
+                for(int k=0;k<MAPTHRESHOLD-MAPWIDTH;k++)printw(" ");
+                printw("level: %d", this->lv);
+                int tmp = this->lv;
+                int count = 0; 
+                while(tmp>=10){
+                    tmp = tmp/10;
+                    count++;
+                }
+                for(int k=0;k<SCREENWIDTH-(MAPTHRESHOLD+11)-count;k++) printw(" ");
+                printw("|");
+        
+            }else{
+                printw("                                     |");
+            }
+        }
+        printw("\n|");
     }
-    printw("score: %d     level: %d",this->points, this->lv);
+    printw("---------------------------------------------------------------------|");
 
     for(int i=0;i<pl->numberOfComponents;i++){
                     int x = pl->xCoordinates[i];
