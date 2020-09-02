@@ -148,12 +148,41 @@ void GameManager::initializePlayer(player*pl, player*backupPlayer){
     }
 }
 
+void GameManager::newLevelAnimations(bool upOrDown){
+
+    if(upOrDown){
+        for(int i=0;i<10;i++){
+            clear();
+            printw("\n\n\n\n\n\n\n\n\n\n                              Level:");
+            for(int k=i;k<10;k++) printw("\n");
+            printw("                                      %d", this->lv); 
+            refresh();
+            usleep(100000);
+        }
+        clear();
+        printw("\n\n\n\n\n\n\n\n\n\n                              Level:  %d",this->lv);
+    }else{
+        for(int i=0;i<10;i++){
+            clear();
+            
+            for(int k=i; k>0;k--) printw("\n");
+            printw("                                      %d", this->lv);
+            for(int j=i;j<10;j++) printw("\n");
+            printw("                              Level:");
+            refresh();
+            usleep(100000);
+        }
+        clear();
+        printw("\n\n\n\n\n\n\n\n\n\n                              Level:  %d",this->lv);
+    }
+}
+
 void GameManager:: prepare(player* pl){
     cleanScreen();
 
     resetLv();
     resetScore();
-
+    this->bestScore = 0;
     LevelManager run(this->lv, this->points);
     level *currentLevel = run.getCurrentLevel();
     initscr();
@@ -168,18 +197,15 @@ void GameManager::gameOver(){
     while(getch()!=-1);
     endwin();
     cout<<"\n\n\n\n"<<endl;
-    cout<<" ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄       ▄▄  ▄▄▄▄▄▄▄▄▄▄▄       ▄▄▄▄▄▄▄▄▄▄▄  ▄               ▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  "<<endl;
-    cout<<"▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░▌     ▐░░▌▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▌▐░▌             ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌ "<<endl;
-    cout<<"▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌▐░▌░▌   ▐░▐░▌▐░█▀▀▀▀▀▀▀▀▀      ▐░█▀▀▀▀▀▀▀█░▌ ▐░▌           ▐░▌ ▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌ "<<endl;
-    cout<<"▐░▌          ▐░▌       ▐░▌▐░▌▐░▌ ▐░▌▐░▌▐░▌               ▐░▌       ▐░▌  ▐░▌         ▐░▌  ▐░▌          ▐░▌       ▐░▌ "<<endl;
-    cout<<"▐░▌ ▄▄▄▄▄▄▄▄ ▐░█▄▄▄▄▄▄▄█░▌▐░▌ ▐░▐░▌ ▐░▌▐░█▄▄▄▄▄▄▄▄▄      ▐░▌       ▐░▌   ▐░▌       ▐░▌   ▐░█▄▄▄▄▄▄▄▄▄ ▐░█▄▄▄▄▄▄▄█░▌ "<<endl;
-    cout<<"▐░▌▐░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌  ▐░▌  ▐░▌▐░░░░░░░░░░░▌     ▐░▌       ▐░▌    ▐░▌     ▐░▌    ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌ "<<endl;
-    cout<<"▐░▌ ▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀█░▌▐░▌   ▀   ▐░▌▐░█▀▀▀▀▀▀▀▀▀      ▐░▌       ▐░▌     ▐░▌   ▐░▌     ▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀█░█▀▀  "<<endl;
-    cout<<"▐░▌       ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░▌               ▐░▌       ▐░▌      ▐░▌ ▐░▌      ▐░▌          ▐░▌     ▐░▌   "<<endl;
-    cout<<"▐░█▄▄▄▄▄▄▄█░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄▄▄      ▐░█▄▄▄▄▄▄▄█░▌       ▐░▐░▌       ▐░█▄▄▄▄▄▄▄▄▄ ▐░▌      ▐░▌  "<<endl;
-    cout<<"▐░░░░░░░░░░░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▌        ▐░▌        ▐░░░░░░░░░░░▌▐░▌       ▐░▌ "<<endl;
-    cout<<" ▀▀▀▀▀▀▀▀▀▀▀  ▀         ▀  ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀       ▀▀▀▀▀▀▀▀▀▀▀          ▀          ▀▀▀▀▀▀▀▀▀▀▀  ▀         ▀  "<<endl;                                                
-    cout<<"\n\n\n\n"<<endl;
+    cout<<"     ██████╗  █████╗ ███╗   ███╗███████╗     ██████╗ ██╗   ██╗███████╗██████╗    "<<endl;
+    cout<<"    ██╔════╝ ██╔══██╗████╗ ████║██╔════╝    ██╔═══██╗██║   ██║██╔════╝██╔══██╗   "<<endl;
+    cout<<"    ██║  ███╗███████║██╔████╔██║█████╗      ██║   ██║██║   ██║█████╗  ██████╔╝   "<<endl;
+    cout<<"    ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝      ██║   ██║╚██╗ ██╔╝██╔══╝  ██╔══██╗   "<<endl;
+    cout<<"    ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗    ╚██████╔╝ ╚████╔╝ ███████╗██║  ██║   "<<endl;
+    cout<<"     ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝     ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝   "<<endl;                                                                                                                      
+    cout<<"\n"<<endl;
+    cout<<"                           Best score of the run: "<<this->bestScore<<endl;
+    cout<<"\n\n\n"<<endl;
 }
 
 int GameManager::levelControl(int startingPoints){ // 0: gameOver, 1 nextLevel, 2 previousLevel
@@ -394,7 +420,6 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
         int y = pl->yCoordinates[i];
         mat[y][x] = pl->components[i];
     }
-
     clear();
     printw("-----------------------------------------------------------------------\n|");
     for(int i = 0; i < MAPHEIGHT; i++){
@@ -437,7 +462,8 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
         }
         printw("\n|");
     }
-    printw("---------------------------------------------------------------------|");
+    printw("-------------------------------|-------------------------------------|");
+
 
     for(int i=0;i<pl->numberOfComponents;i++){
                     int x = pl->xCoordinates[i];
@@ -473,8 +499,8 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
     }
 
     run.updateCollectiblesLists( (viewPosition + (MAPHEIGHT-1)) );
-
-}////// ATTENZIONE: IMPLEMENTARE MATRICE GEMELLA CON PUNTATORE A COLLECTIBLE PER OTTIMIZZARE
+    refresh();
+}
 
 void GameManager::start(LevelManager run, level *currentLevel, player*backupPlayer){
     char command = -1;
@@ -484,11 +510,16 @@ void GameManager::start(LevelManager run, level *currentLevel, player*backupPlay
     Collectible *collectiblesMap[MAPHEIGHT][MAPWIDTH];
     int viewPosition;
     player*pl = new player;
+    bool upOrDown;
 
-    while(inGame){ 
-                //START NEW LEVEL "animescions"
+    while(inGame){       
         this->lv = currentLevel->levelNumber;
         this->points = currentLevel->startingPoints;
+        clear();
+        if(this->lv != 1) newLevelAnimations(upOrDown);
+        else {printw("\n\n\n\n\n\n\n\n\n\n                              Level: 1 ");}
+        refresh();
+        usleep(2500000);  
         initializePlayer(pl, backupPlayer);
         bool levelChanged = false;
         initializeMap(mat,backupPlayer, collectiblesMap);
@@ -498,28 +529,30 @@ void GameManager::start(LevelManager run, level *currentLevel, player*backupPlay
         bool newLevel = true;
 
         while(!levelChanged && inGame){ // next level condition
-            modifyPointsBy(5);
+            modifyPointsBy(BONUSPOINTS);
+            if(this->points > this->bestScore) this->bestScore = this->points;
             viewPosition++;
             collisionType = collisionControl(pl, collectiblesMap);
             //collision stuff
             
             int levelContoller = levelControl(currentLevel->startingPoints);
             if(levelContoller==0) inGame = false;
-            if(levelContoller==1) {levelChanged = true; currentLevel = run.nextLevel();} 
-            if(levelContoller==2) {levelChanged = true; currentLevel = run.previousLevel();} 
+            if(levelContoller==1) {levelChanged = true; upOrDown=true; currentLevel = run.nextLevel();} 
+            if(levelContoller==2) {levelChanged = true;  upOrDown=false; currentLevel = run.previousLevel();} 
             
             if(!levelChanged && inGame ){
                 mapConstruction(density, currentLevel, run, viewPosition);
                 if(newLevel==true ) run.initializeCollectiblesLists();
                 newLevel = false;
                 print(mat, viewPosition, run, pl, collectiblesMap);
+                int time = run.generateTime();
+                usleep(time); 
+                clear();
                 command = getPlayerCommand();
                 if(command == 0) inGame = false;
                 else if(command!= -1) modifyPlayerPosition(command, pl);
                 //if(command!='u' && command!='d')modifyPlayerPosition('d',pl);
             }
-            int time = run.generateTime();
-            usleep(time); 
         }
         while(getch()!=-1); //per pulire eventuali comandi rimasti
     }

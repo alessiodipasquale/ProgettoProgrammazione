@@ -3,17 +3,17 @@
 
 const int LEVELDOWNRANGE = 200;
 const int LEVELUPRANGE = 1000;
-const int MAPWIDTH = 31; //sempre dispari e 11 <= x <= 37 per essere giocabile
-const int MAPHEIGHT = 29; //sempre dispari e 11 <= x <= 37 per essere giocabile
+const int MAPWIDTH = 31;
+const int MAPHEIGHT = 31;
 const int MAPTHRESHOLD = 37;
 const int SCREENWIDTH = 71;
-const int SCREENHEIGHT = 60;
 const int MAXDENSITY = 20; // percentage of a view surface
 const int THRESHOLDLEVELFORMAXDENSITY = 100;
 const int YCARSPAWN = MAPHEIGHT / 2;
 const int STARTINGREFRESHTIME = 300000;
 const int TIMETHRESHOLD = 30000; 
 const int WALLPENALITY = -200;
+const int BONUSPOINTS = 5;
 
 /////////////////////////////////////////////SKIN
 const int NUMBEROFCOMPONENTS_1 = 6;

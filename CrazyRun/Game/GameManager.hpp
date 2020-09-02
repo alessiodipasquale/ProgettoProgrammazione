@@ -12,6 +12,7 @@ class GameManager {
     public:
         int lv;
         int points;
+        int bestScore;
         int playerPosition;
 
         void cleanScreen();
@@ -21,6 +22,8 @@ class GameManager {
         void information();
 
         void prepare(player* pl);
+
+        void newLevelAnimations(bool upOrDown);
 
         void start(LevelManager run, level *currentLevel, player* backupPlayer);
 
