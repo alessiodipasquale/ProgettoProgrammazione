@@ -1,1 +1,0 @@
-g++ main.cpp Utils/includes.hpp Utils/Constants.hpp  Game/GameManager.hpp Game/GameManager.cpp Game/LevelManager.hpp Game/LevelManager.cpp Scenes/Map.hpp Scenes/Map.cpp Scenes/Collectible.hpp Scenes/Collectible.cpp  Scenes/Collectibles.hpp Scenes/Collectibles.cpp -lncurses
