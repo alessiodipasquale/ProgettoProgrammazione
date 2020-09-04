@@ -9,7 +9,7 @@ void GameManager::mainMenu() {
     while(!valid){
         cleanScreen();
         cout<<"********************************************************************"<<endl;
-        cout<<"*                    Progetto di programmazione                    *"<<endl;
+        cout<<"*                                                                  *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"*             _____                    ______                      *"<<endl;
@@ -22,15 +22,15 @@ void GameManager::mainMenu() {
         cout<<"*                                 |___/                            *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"*                                                                  *"<<endl;
-        cout<<"*                         1. Avvia il gioco                        *"<<endl;
+        cout<<"*                             1. Start                             *"<<endl;
         cout<<"*                                                                  *"<<endl;
-        cout<<"*                      2. Informazioni e crediti                   *"<<endl;
+        cout<<"*                            2. Credits                            *"<<endl;
         cout<<"*                                                                  *"<<endl;
-        cout<<"*                              3. Esci                             *"<<endl;
+        cout<<"*                              3. Exit                             *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"********************************************************************"<<endl;
         cout<<endl;
-        cout<<"Seleziona: ";
+        cout<<"Select: ";
         int risposta;
         cin>>risposta;
         switch (risposta)
@@ -45,8 +45,10 @@ void GameManager::mainMenu() {
             break;
         case 3:
             valid = true;
-            void kill();
-        default:
+            kill();
+            break;
+        default: 
+            cout<<" Error: wrong key pressed"<<endl;
             break;
         }
     }
@@ -57,19 +59,19 @@ void GameManager::information() {
     while(!valid){
         cleanScreen();
         cout<<"********************************************************************"<<endl;
-        cout<<"*                     Progetto di programmazione                   *"<<endl;
+        cout<<"*                              CrazyRun                            *"<<endl;
         cout<<"*                                                                  *"<<endl;
-        cout<<"*                               Autori                             *"<<endl;
+        cout<<"*                              Credits:                            *"<<endl;
         cout<<"*                         Colamonaco Stefano                       *"<<endl;
         cout<<"*                         Di Pasquale Alessio                      *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"*                                                                  *"<<endl;
-        cout<<"*                           1. Torna al menu'                      *"<<endl;
-        cout<<"*                              2. Esci                             *"<<endl;
+        cout<<"*                           1. Back to menu'                       *"<<endl;
+        cout<<"*                              2. Exit                             *"<<endl;
         cout<<"********************************************************************"<<endl;
         cout<<endl;
-        cout<<"Seleziona: ";
+        cout<<"Select: ";
         int risposta;
         cin>>risposta;
         switch (risposta)
@@ -83,6 +85,7 @@ void GameManager::information() {
             kill();
             break;
         default:
+            cout<<" Error: wrong key pressed"<<endl;
             break;
         }
     }
@@ -108,7 +111,7 @@ void GameManager::playerSelection(){
         cout<<"|*|         1         |*|         2         |*|         3         |*|"<<endl;
         cout<<" *******************************************************************"<<endl;
         cout<<endl;
-        cout<<" select a skin: ";
+        cout<<" Select a skin: ";
         cin>>response;
     }while(response != 1 && response != 2 && response != 3);
 
@@ -182,7 +185,6 @@ void GameManager:: prepare(player* pl){
 
     resetLv();
     resetScore();
-    this->bestScore = 0;
     LevelManager run(this->lv, this->points);
     level *currentLevel = run.getCurrentLevel();
     initscr();
@@ -215,16 +217,9 @@ int GameManager::levelControl(int startingPoints){ // 0: gameOver, 1 nextLevel, 
     return -1;
 }
 
-void GameManager::prevLevel(){
-
-}
-
-void GameManager::nextLevel(){
-
-}
-
 void GameManager::resetScore(){
     this->points = 0;
+    this->bestScore = 0;
 }
 
 void GameManager::resetLv(){
@@ -238,12 +233,6 @@ int GameManager::kill(){
 void GameManager::modifyPointsBy(int value){
     this->points = this->points + value;
 };
-
-int GameManager::collision(){
-    if(0) {
-
-    }else return -1;
-}
 
 int GameManager::collisionControl(player*pl, Collectible*collectiblesMap[][MAPWIDTH]){
     bool wall = false;
@@ -462,8 +451,8 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
         }
         printw("\n|");
     }
-    printw("-------------------------------|-------------------------------------|");
-
+    printw("                               |                                     |");
+    refresh();
 
     for(int i=0;i<pl->numberOfComponents;i++){
                     int x = pl->xCoordinates[i];
@@ -499,7 +488,6 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
     }
 
     run.updateCollectiblesLists( (viewPosition + (MAPHEIGHT-1)) );
-    refresh();
 }
 
 void GameManager::start(LevelManager run, level *currentLevel, player*backupPlayer){
@@ -533,7 +521,6 @@ void GameManager::start(LevelManager run, level *currentLevel, player*backupPlay
             if(this->points > this->bestScore) this->bestScore = this->points;
             viewPosition++;
             collisionType = collisionControl(pl, collectiblesMap);
-            //collision stuff
             
             int levelContoller = levelControl(currentLevel->startingPoints);
             if(levelContoller==0) inGame = false;
@@ -549,9 +536,9 @@ void GameManager::start(LevelManager run, level *currentLevel, player*backupPlay
                 usleep(time); 
                 clear();
                 command = getPlayerCommand();
+                //command = 'u';
                 if(command == 0) inGame = false;
                 else if(command!= -1) modifyPlayerPosition(command, pl);
-                //if(command!='u' && command!='d')modifyPlayerPosition('d',pl);
             }
         }
         while(getch()!=-1); //per pulire eventuali comandi rimasti

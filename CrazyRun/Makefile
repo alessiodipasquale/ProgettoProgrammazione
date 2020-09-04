@@ -20,7 +20,7 @@ Collectibles.o: Scenes/Collectibles.cpp
 	g++ -c Scenes/Collectibles.cpp
 
 run:
-	make crazy-run && ./a.out
+	make crazy-run && ./CrazyRun
 
 clean:
 	rm -rf *.o

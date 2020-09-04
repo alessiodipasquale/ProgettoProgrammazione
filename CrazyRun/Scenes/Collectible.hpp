@@ -10,8 +10,8 @@ class Collectible { //classe padre di tutti gli oggetti che possono essere incon
         bool moving; //purtroppo la consegna dice che devono esserci altre macchine, che si presuppone non siano ferme come 
                      //gli altri oggetti, quindi se "moving" è true, a ogni refresh l'oggetto si muoverà comunque verso il basso, 
                      //ma meno rispetto agli altri oggetti 
-        int baseValue;
-        int power;
+        int baseValue; //valore di partenza di bonus/malus
+        int power; //valore effettivo
    public:
         void init();
         int getYFromStart();

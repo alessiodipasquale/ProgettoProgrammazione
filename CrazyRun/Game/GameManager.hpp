@@ -37,15 +37,9 @@ class GameManager {
 
         int levelControl(int startingPoints);
 
-        void prevLevel();
-
-        void nextLevel();
-
         void resetScore();
 
         void resetLv();
-
-        int collision();
 
         int collisionControl(player*pl, Collectible*collectiblesMap[][MAPWIDTH]);
 
