@@ -31,9 +31,9 @@ void GameManager::mainMenu() {
         cout<<"********************************************************************"<<endl;
         cout<<endl;
         cout<<"Select: ";
-        int risposta;
-        cin>>risposta;
-        switch (risposta)
+        int res;
+        cin>>res;
+        switch (res)
         {
         case 1:
             valid = true;
@@ -72,9 +72,9 @@ void GameManager::information() {
         cout<<"********************************************************************"<<endl;
         cout<<endl;
         cout<<"Select: ";
-        int risposta;
-        cin>>risposta;
-        switch (risposta)
+        int res;
+        cin>>res;
+        switch (res)
         {
         case 1:
             valid = true;
@@ -152,37 +152,37 @@ void GameManager::initializePlayer(player*pl, player*backupPlayer){
 }
 
 void GameManager::newLevelAnimations(bool upOrDown){
-
-    if(upOrDown){
-        for(int i=0;i<10;i++){
+    if(this->lv == 1) printw("\n\n\n\n\n\n\n\n\n\n                              Level: 1 ");
+    else {
+        if(upOrDown){
+            for(int i=0;i<10;i++){
+                clear();
+                printw("\n\n\n\n\n\n\n\n\n\n                              Level:");
+                for(int k=i;k<10;k++) printw("\n");
+                printw("                                      %d", this->lv); 
+                refresh();
+                usleep(100000);
+            }
             clear();
-            printw("\n\n\n\n\n\n\n\n\n\n                              Level:");
-            for(int k=i;k<10;k++) printw("\n");
-            printw("                                      %d", this->lv); 
-            refresh();
-            usleep(100000);
-        }
-        clear();
-        printw("\n\n\n\n\n\n\n\n\n\n                              Level:  %d",this->lv);
-    }else{
-        for(int i=0;i<10;i++){
+            printw("\n\n\n\n\n\n\n\n\n\n                              Level:  %d",this->lv);
+        }else{
+            for(int i=0;i<10;i++){
+                clear();
+                for(int k=i; k>0;k--) printw("\n");
+                printw("                                      %d", this->lv);
+                for(int j=i;j<10;j++) printw("\n");
+                printw("                              Level:");
+                refresh();
+                usleep(100000);
+            }
             clear();
-            
-            for(int k=i; k>0;k--) printw("\n");
-            printw("                                      %d", this->lv);
-            for(int j=i;j<10;j++) printw("\n");
-            printw("                              Level:");
-            refresh();
-            usleep(100000);
+            printw("\n\n\n\n\n\n\n\n\n\n                              Level:  %d",this->lv);
         }
-        clear();
-        printw("\n\n\n\n\n\n\n\n\n\n                              Level:  %d",this->lv);
     }
 }
 
 void GameManager:: prepare(player* pl){
     cleanScreen();
-
     resetLv();
     resetScore();
     LevelManager run(this->lv, this->points);
@@ -446,7 +446,21 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
                 printw("|");
         
             }else{
-                printw("                                     |");
+                if(i==19){
+                    for(int k=0;k<MAPTHRESHOLD-MAPWIDTH;k++) printw(" ");
+                    printw("Press arrow keys to move");
+                    for(int k=0;k<SCREENWIDTH-(MAPTHRESHOLD+27);k++) printw(" ");
+                    printw("|");
+                }else{
+                    if(i==21){
+                        for(int k=0;k<MAPTHRESHOLD-MAPWIDTH;k++) printw(" ");
+                        printw("Press 'q' to quit");
+                        for(int k=0;k<SCREENWIDTH-(MAPTHRESHOLD+20);k++) printw(" ");
+                        printw("|");
+                    }else{
+                        printw("                                     |");
+                    }
+                }    
             }
         }
         printw("\n|");
@@ -504,8 +518,7 @@ void GameManager::start(LevelManager run, level *currentLevel, player*backupPlay
         this->lv = currentLevel->levelNumber;
         this->points = currentLevel->startingPoints;
         clear();
-        if(this->lv != 1) newLevelAnimations(upOrDown);
-        else {printw("\n\n\n\n\n\n\n\n\n\n                              Level: 1 ");}
+        newLevelAnimations(upOrDown);
         refresh();
         usleep(2500000);  
         initializePlayer(pl, backupPlayer);
@@ -516,7 +529,7 @@ void GameManager::start(LevelManager run, level *currentLevel, player*backupPlay
         int density = run.generateDensity();
         bool newLevel = true;
 
-        while(!levelChanged && inGame){ // next level condition
+        while(!levelChanged && inGame){
             modifyPointsBy(BONUSPOINTS);
             if(this->points > this->bestScore) this->bestScore = this->points;
             viewPosition++;
@@ -536,12 +549,11 @@ void GameManager::start(LevelManager run, level *currentLevel, player*backupPlay
                 usleep(time); 
                 clear();
                 command = getPlayerCommand();
-                //command = 'u';
                 if(command == 0) inGame = false;
                 else if(command!= -1) modifyPlayerPosition(command, pl);
             }
         }
-        while(getch()!=-1); //per pulire eventuali comandi rimasti
+        while(getch()!=-1);
     }
     gameOver();
 }

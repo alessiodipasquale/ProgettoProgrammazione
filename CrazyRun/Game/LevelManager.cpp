@@ -1,5 +1,5 @@
 #include "LevelManager.hpp"
-//il primo livello lo genera il costruttore 
+
 LevelManager::LevelManager(int startingLevel, int startingPoints){
     this->currentLevel = new level;
     this->currentLevel->prev = NULL;
@@ -8,7 +8,6 @@ LevelManager::LevelManager(int startingLevel, int startingPoints){
     this->currentLevel->startingPoints = startingPoints;
 }
 
- //si userà next level, che in caso di bisogno richiama new level
 level* LevelManager::newLevel(){  
     this->currentLevel->next = new level;
     this->currentLevel->next->prev = this->currentLevel;
@@ -24,7 +23,7 @@ level* LevelManager::previousLevel(){
         this->currentLevel = this->currentLevel->prev;
         return this->currentLevel;
     }else{
-        return NULL; //fare controllo ricezione null
+        return NULL;
     }
 }
 
