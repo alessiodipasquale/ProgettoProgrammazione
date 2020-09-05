@@ -68,7 +68,7 @@ void GameManager::information() {
         cout<<"*                                                                  *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"*                           1. Back to menu'                       *"<<endl;
-        cout<<"*                              2. Exit                             *"<<endl;
+        cout<<"*                             2. Exit                              *"<<endl;
         cout<<"********************************************************************"<<endl;
         cout<<endl;
         cout<<"Select: ";
