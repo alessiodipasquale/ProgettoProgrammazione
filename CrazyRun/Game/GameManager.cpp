@@ -26,7 +26,7 @@ void GameManager::mainMenu() {
         cout<<"*                                                                  *"<<endl;
         cout<<"*                            2. Credits                            *"<<endl;
         cout<<"*                                                                  *"<<endl;
-        cout<<"*                              3. Exit                             *"<<endl;
+        cout<<"*                             3. Exit                              *"<<endl;
         cout<<"*                                                                  *"<<endl;
         cout<<"********************************************************************"<<endl;
         cout<<endl;
@@ -69,6 +69,7 @@ void GameManager::information() {
         cout<<"*                                                                  *"<<endl;
         cout<<"*                           1. Back to menu'                       *"<<endl;
         cout<<"*                             2. Exit                              *"<<endl;
+        cout<<"*                                                                  *"<<endl;
         cout<<"********************************************************************"<<endl;
         cout<<endl;
         cout<<"Select: ";
@@ -465,7 +466,7 @@ void GameManager::print(char mat[][MAPWIDTH], int viewPosition, LevelManager run
         }
         printw("\n|");
     }
-    printw("                               |                                     |");
+    printw("-------------------------------|-------------------------------------|");
     refresh();
 
     for(int i=0;i<pl->numberOfComponents;i++){
@@ -513,8 +514,9 @@ void GameManager::start(LevelManager run, level *currentLevel, player*backupPlay
     int viewPosition;
     player*pl = new player;
     bool upOrDown;
+    currentLevel->levelNumber =100;
 
-    while(inGame){       
+    while(inGame){      
         this->lv = currentLevel->levelNumber;
         this->points = currentLevel->startingPoints;
         clear();
@@ -538,7 +540,10 @@ void GameManager::start(LevelManager run, level *currentLevel, player*backupPlay
             int levelContoller = levelControl(currentLevel->startingPoints);
             if(levelContoller==0) inGame = false;
             if(levelContoller==1) {levelChanged = true; upOrDown=true; currentLevel = run.nextLevel();} 
-            if(levelContoller==2) {levelChanged = true;  upOrDown=false; currentLevel = run.previousLevel();} 
+            if(levelContoller==2) {
+                levelChanged = true;  upOrDown=false; currentLevel = run.previousLevel(); 
+                if(currentLevel==NULL) {inGame=false; kill();} //controllo necessario solo se si vuole modificare il livello corrente a mano
+            } 
             
             if(!levelChanged && inGame ){
                 mapConstruction(density, currentLevel, run, viewPosition);
@@ -547,7 +552,6 @@ void GameManager::start(LevelManager run, level *currentLevel, player*backupPlay
                 print(mat, viewPosition, run, pl, collectiblesMap);
                 int time = run.generateTime();
                 usleep(time); 
-                clear();
                 command = getPlayerCommand();
                 if(command == 0) inGame = false;
                 else if(command!= -1) modifyPlayerPosition(command, pl);

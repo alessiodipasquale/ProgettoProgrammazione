@@ -50,7 +50,6 @@ int LevelManager::generateDensity(){
 }
 
 int LevelManager::generateTime(){
-    // 500000 -> 50000
     int time = STARTINGREFRESHTIME - (this->currentLevel->levelNumber * 10000);
     if(time < TIMETHRESHOLD) time = TIMETHRESHOLD;
     return time;
