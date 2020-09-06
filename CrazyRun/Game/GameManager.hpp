@@ -9,15 +9,17 @@ struct player{
 };
 
 class GameManager {
-    public:
+    public: 
+    
+    void mainMenu();
+
+    private:
         int lv;
         int points;
         int bestScore;
         int playerPosition;
 
         void cleanScreen();
-
-        void mainMenu();
 
         void information();
 

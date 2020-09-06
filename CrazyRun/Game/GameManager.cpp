@@ -269,7 +269,7 @@ char GameManager::getPlayerCommand(){
     } else {
         if(c1 == 'q'){
             endwin();
-            cout<<"sure? (y for yes,  n for no)"<<endl;
+            cout<<"Are you sure? (y for yes,  n for no)"<<endl;
             do{
                 cin>>c1;
                 if(c1 == 'y') {
@@ -378,7 +378,6 @@ void GameManager::mapConstruction(int density, level*currentLevel, LevelManager 
                 if(random == 0){ // 33% di possibilità di spawn
                     car = true;
                     numberOfMalus = density - (numberOfBonus + 1);
-                    //printw("bon:%d  mal:%d ",numberOfBonus, numberOfMalus) ;
                 }else numberOfMalus = density - numberOfBonus;
             }else numberOfMalus = density - numberOfBonus;
         }else numberOfBonus = density + 1;

@@ -13,9 +13,7 @@ class Map {
  
     private:
         int lastConsideredZone = MAPHEIGHT-1;
-
         bool generationMatrix[MAPHEIGHT][MAPWIDTH];
-
         bonus*bonusHead = NULL;
         malus*malusHead = NULL;
         car*carHead = NULL;
