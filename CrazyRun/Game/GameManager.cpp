@@ -514,7 +514,6 @@ void GameManager::start(LevelManager run, level *currentLevel, player*backupPlay
     int viewPosition;
     player*pl = new player;
     bool upOrDown;
-    currentLevel->levelNumber =100;
 
     while(inGame){      
         this->lv = currentLevel->levelNumber;
